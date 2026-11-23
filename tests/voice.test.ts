@@ -33,6 +33,8 @@ describe('speech text planning', () => {
   it('cleans symbols the engine would read out or choke on', () => {
     expect(spoken('2 H2 + O2 → 2 H2O ♥')).toBe("2 [['eItS]] two plus [['oU]] two makes 2 [['eItS]] two [['oU]]");
     expect(spoken('Carbon-14 is 50% gone ≈ 5730 years')).toBe('carbon 14 is 50 percent gone about 5730 years');
+    expect(spoken('2 H₂ + O₂ → 2 H₂O')).toBe("2 [['eItS]] two plus [['oU]] two makes 2 [['eItS]] two [['oU]]");
+    expect(spoken('Iron melts at 1,538 °C; helium at −272 °C.')).toBe('iron melts at 1538 degrees celsius; helium at minus 272 degrees celsius.');
     expect(spoken('Try [[danger]] this')).not.toContain('[[');
     expect(planSpeech('♥ ✦ …')).toEqual([]);
   });

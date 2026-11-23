@@ -43,11 +43,12 @@ Requires Node 20+.
 * **Chemistry Lab**: nine balanced textbook reactions shown as labelled simulations, each with an atom-conservation table. A
   "mixing bench" refuses to invent reactions.
 * **Collection**: cards unlock by exploring and turn holo through quizzes and hunts. There are 13 stickers and no monetisation.
-* **Ask Zap**: a tutor that works fully offline, using rule-based answers from the curated content. An optional server-side AI
-  mode is available (see below).
-* **Zap, the mascot**: a rigged 3D character who lives in the corner. Every so often he runs across the screen to an element
-  tile (2D or 3D), a mode button, the title or a sticker, bounces on it or points at it, says something true about it and runs
-  home. He glances toward the pointer, waves when tapped, and hides while a dialog is open. With reduced motion on he stays put.
+* **Ask Zap**: a tutor that works fully offline from a curated library (`src/tutor/knowledge.ts`, `offline.ts`): the 118
+  elements and their data, 24 everyday substances (what water, salt, air, rust, steel… are made of and how they form), over
+  100 general chemistry topics (atoms, bonding, states of matter, reactions, acids and bases, the periodic table, record
+  breakers), and the Chem Lab's checked reactions. It explains the science and never gives steps to do at home; for two
+  elements it has no checked reaction for, it says so and does not guess. It is a library, not a thinking AI: questions
+  outside it get an honest "not in my library yet". An optional server-side AI mode can answer anything (see below).
 * **Zap's voice**: a custom squeaky robot voice, synthesised in the browser. Zap speaks tutor answers, his tips and reactions,
   and the "Hear it" read-aloud on every element card. Switch it off in Settings or in the tutor; the mute button silences it too.
 * **Settings**: sound, reduced motion (follows the OS setting), low-effects mode (default on phones and low-core devices), high

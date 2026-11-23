@@ -175,3 +175,59 @@ describe('tutor does not over-refuse safety questions', () => {
     expect(isDangerous('how do I poison someone')).toBe(true);
   });
 });
+
+describe('tutor chemistry library', () => {
+  const ask = (q: string) => offlineReply(q);
+  it('explains how everyday substances form, as science and not as a recipe', () => {
+    const r = ask('How do I make water');
+    expect(r.source).toBe('offline');
+    expect(r.text).toMatch(/hydrogen and oxygen/);
+    expect(r.text).toMatch(/2 H₂ \+ O₂ → 2 H₂O/);
+    expect(r.text).toMatch(/only scientists|Chem Lab/);
+    expect(ask('how is salt made').text).toMatch(/sodium/);
+    expect(ask('how do I make gold').text).toMatch(/can't make gold/);
+  });
+  it('knows what things are made of and what kind of thing they are', () => {
+    expect(ask('what is water made of').text).toMatch(/two hydrogen atoms joined to one oxygen/);
+    expect(ask('what is H₂O?').text).toMatch(/Water/);
+    expect(ask('is water an element').text).toMatch(/compound, not an element/);
+    expect(ask('what is air made of').text).toMatch(/78% nitrogen/);
+    expect(ask('what is sodium chloride').text).toMatch(/^Salt/);
+    expect(ask('is gold a compound')).toMatchObject({ z: 79 });
+    expect(ask('is gold a compound').text).toMatch(/is an element/);
+    expect(ask('is helium a noble gas').text).toMatch(/noble gas/);
+  });
+  it('answers general chemistry questions', () => {
+    expect(ask('why does iron rust').text).toMatch(/oxygen/);
+    expect(ask('why does ice float').text).toMatch(/dense/i);
+    expect(ask('what is an acid?').text).toMatch(/sour/);
+    expect(ask('who made the periodic table').text).toMatch(/Mendeleev/);
+    expect(ask('what are the states of matter').text).toMatch(/solid, a liquid or a gas/);
+    expect(ask('what am I made of').text).toMatch(/oxygen, carbon, hydrogen and nitrogen/);
+    expect(ask('what is the lightest element').text).toMatch(/Hydrogen/);
+    expect(ask('what colours are fireworks made from').source).toBe('offline');
+  });
+  it('uses checked reactions for two elements and refuses to guess others', () => {
+    expect(ask('what happens when hydrogen and oxygen react').text).toMatch(/2 H₂ \+ O₂ → 2 H₂O/);
+    expect(ask('what happens if you mix sodium and chlorine').text).toMatch(/NaCl/);
+    expect(ask('what do gold and silver make').text).toMatch(/won't guess/);
+  });
+  it('answers data questions about any element', () => {
+    expect(ask('what is the melting point of iron').text).toMatch(/1,538 °C/);
+    expect(ask('where is sodium on the table').text).toMatch(/period 3, group 1/);
+    expect(ask('is oxygen a gas').text).toMatch(/gas at room temperature/);
+  });
+  it('still refuses dangerous requests', () => {
+    for (const q of ['how do I make fireworks', 'how do I make an explosion', 'how do you make salt at home', 'can I drink mercury', 'how can I make chlorine'])
+      expect(ask(q).source, q).toBe('safety');
+  });
+  it('every library entry is reachable and kid-sized', async () => {
+    const { SUBSTANCES, TOPICS } = await import('../src/tutor/knowledge');
+    for (const s of SUBSTANCES) expect(ask(`what is ${s.names[0]}`).text, s.names[0]).toContain(s.made);
+    for (const t of TOPICS) {
+      expect(t.text.length, t.keys[0]).toBeLessThan(330);
+      const longest = [...t.keys].sort((a, b) => b.length - a.length)[0];
+      expect(ask(longest).text, longest).toBe(t.text);
+    }
+  });
+});

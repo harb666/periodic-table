@@ -81,6 +81,9 @@ function sayWord(word: string, next: string): string {
 function toSpoken(sentence: string): string {
   const cleaned = sentence
     .replace(/\[\[|\]\]/g, ' ') // never let text smuggle in phoneme input
+    .replace(/[₀-₉]/g, (d) => String('₀₁₂₃₄₅₆₇₈₉'.indexOf(d))) // H₂O → H2O
+    .replace(/(\d),(?=\d{3}\b)/g, '$1') // 1,538 → 1538
+    .replace(/−(?=\d)|(?<=^|\s)-(?=\d)/g, ' minus ') // −273 (but not carbon-14)
     .replace(/[“”"«»*_#`~^|<>{}]/g, ' ')
     .replace(/[‘’]/g, "'")
     .replace(/→|⟶|->/g, ' makes ')

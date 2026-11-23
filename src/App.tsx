@@ -42,6 +42,14 @@ export default function App() {
   const [tutorSeed, setTutorSeed] = useState<{ z: number; n: number } | null>(null);
   const [mascotMsg, setMascotMsg] = useState<string | null>(null);
   const webgl = useMemo(() => hasWebGL(), []);
+  // On a phone the corner mascot would sit on top of the tutor's Send button; his portrait is in the tutor header instead.
+  const smallScreen = useMemo(() => {
+    try {
+      return window.matchMedia('(max-width: 760px)').matches;
+    } catch {
+      return false;
+    }
+  }, []);
 
   // Reflect settings on <html> for CSS
   useEffect(() => {
@@ -168,7 +176,7 @@ export default function App() {
         />
       )}
       {showSettings && <SettingsPanel onClose={() => setShowSettings(false)} />}
-      {settings.mascot && <Mascot message={mascotMsg} hidden={detailZ !== null || showSettings} webgl={webgl} reducedMotion={settings.reducedMotion} />}
+      {settings.mascot && <Mascot message={mascotMsg} hidden={detailZ !== null || showSettings || (mode === 'tutor' && smallScreen)} webgl={webgl} reducedMotion={settings.reducedMotion} />}
       <div className="toasts" aria-live="assertive">
         {toasts.map((t) => (
           <div key={t.id} className="toast">

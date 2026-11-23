@@ -16,11 +16,11 @@ export function Tutor() {
   const settings = useSettings();
   const { openElement, tutorSeed, selectedZ } = useApp();
   const [msgs, setMsgs] = useState<Msg[]>([
-    { role: 'assistant', text: "Hi! I'm Zap, a chemistry helper program. Ask me about any element, atoms, isotopes – or say “quiz me”!", source: 'offline' },
+    { role: 'assistant', text: "Hi! I'm Zap, a chemistry helper program. Ask me about any element, what things are made of, how reactions work – or say “quiz me”!", source: 'offline' },
   ]);
   const [input, setInput] = useState('');
   const [busy, setBusy] = useState(false);
-  const [suggestions, setSuggestions] = useState<string[]>(['What is an atom?', 'Tell me about gold', 'Quiz me']);
+  const [suggestions, setSuggestions] = useState<string[]>(['What is water made of?', 'Tell me about gold', 'Quiz me']);
   const [online, setOnline] = useState<boolean | null>(null);
   const [contextZ, setContextZ] = useState<number | undefined>(selectedZ ?? undefined);
   const listRef = useRef<HTMLDivElement>(null);
