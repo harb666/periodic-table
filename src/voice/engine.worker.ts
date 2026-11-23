@@ -1,16 +1,18 @@
 // Speech synthesis worker: eSpeak (via meSpeak, GPL) with Zap's custom voice
 // definition. Runs off the main thread so a sentence never stalls rendering.
-// In: { id, text, speed, pitch }   Out: { id, pcm, sampleRate } | { id, error }
+// In: { warm } | { id, text, speed, pitch, wordgap }   Out: { ready } | { id, pcm, sampleRate } | { id, error }
 import meSpeak from 'mespeak';
 import config from 'mespeak/src/mespeak_config.json';
 import enUS from 'mespeak/voices/en/en-us.json';
 import { VOICE_LINES } from './profile';
 
 interface Request {
+  warm?: boolean;
   id: number;
   text: string;
   speed: number;
   pitch: number;
+  wordgap: number;
 }
 
 const scope = self as unknown as { postMessage(msg: unknown, transfer?: Transferable[]): void; onmessage: ((e: MessageEvent<Request>) => void) | null };
@@ -51,10 +53,15 @@ function decodeWav(buf: ArrayBuffer): { pcm: Float32Array; sampleRate: number } 
 }
 
 scope.onmessage = (e) => {
-  const { id, text, speed, pitch } = e.data;
+  if (e.data.warm) {
+    init();
+    scope.postMessage({ ready: true });
+    return;
+  }
+  const { id, text, speed, pitch, wordgap } = e.data;
   try {
     init();
-    const wav = meSpeak.speak(text, { voice: VOICE_ID, speed, pitch, amplitude: 100, rawdata: true });
+    const wav = meSpeak.speak(text, { voice: VOICE_ID, speed, pitch, wordgap, amplitude: 100, rawdata: true });
     if (!(wav instanceof ArrayBuffer) || wav.byteLength < 100) throw new Error('engine returned no audio');
     const { pcm, sampleRate } = decodeWav(wav);
     if (pcm.length < 200) throw new Error('engine returned no audio');

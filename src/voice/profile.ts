@@ -16,20 +16,24 @@ export type Emotion = 'neutral' | 'excited' | 'curious' | 'confused' | 'surprise
  * of each resonance, giving the small-creature, slightly synthetic timbre.
  */
 export const VOICE_LINES = [
-  'pitch 245 640',
-  'formant 1 112 100 100',
-  'formant 2 115 100 100',
-  'formant 3 115 108 100',
-  'formant 4 110 118 100',
-  'formant 5 110 118 100',
-  'flutter 8',
-  'roughness 5',
+  'pitch 255 670',
+  // Formants are raised only modestly: pushed further, vowels start to sound alike and words blur.
+  'formant 1 106 100 100',
+  'formant 2 108 100 100',
+  'formant 3 108 108 100',
+  'formant 4 105 115 100',
+  'formant 5 105 115 100',
+  'consonants 140 140',
+  'flutter 5',
+  'roughness 2',
   'stressAdd 15 15 15 15 0 0 40 60',
 ];
 
 export interface EmotionPreset {
   /** eSpeak words per minute, before playback rate. */
   speed: number;
+  /** Extra pause between words, in 10 ms units. */
+  wordgap: number;
   /** eSpeak pitch setting, 0–99, within the voice's pitch range. */
   pitch: number;
   /** Playback rate: raises pitch and formants together (the "small" in small and squeaky). */
@@ -38,6 +42,8 @@ export interface EmotionPreset {
   wobble: number;
   /** Chance that a step is a sudden jump to another register. */
   jump: number;
+  /** Chance that the whole phrase sits up in the squeal register. */
+  squeal: number;
   /** Vibrato depth in cents. */
   vibrato: number;
   /** Pitch offset at the start of the phrase, decaying away (cents). */
@@ -46,13 +52,15 @@ export interface EmotionPreset {
   endRise: number;
 }
 
+// Explaining voices (neutral, teaching) are slower, steadier and a little lower, so long
+// sentences stay easy to follow; the short exclamations carry the wild pitch acrobatics.
 export const EMOTIONS: Record<Emotion, EmotionPreset> = {
-  neutral: { speed: 112, pitch: 50, rate: 1.18, wobble: 170, jump: 0.16, vibrato: 22, startLift: 0, endRise: 0 },
-  excited: { speed: 126, pitch: 62, rate: 1.22, wobble: 240, jump: 0.32, vibrato: 32, startLift: 150, endRise: 120 },
-  curious: { speed: 112, pitch: 55, rate: 1.18, wobble: 150, jump: 0.14, vibrato: 24, startLift: 0, endRise: 480 },
-  confused: { speed: 98, pitch: 42, rate: 1.13, wobble: 240, jump: 0.08, vibrato: 55, startLift: -120, endRise: 200 },
-  surprised: { speed: 126, pitch: 70, rate: 1.24, wobble: 190, jump: 0.3, vibrato: 30, startLift: 620, endRise: 0 },
-  teaching: { speed: 108, pitch: 48, rate: 1.16, wobble: 85, jump: 0.05, vibrato: 14, startLift: 0, endRise: 0 },
+  neutral: { speed: 104, wordgap: 1, pitch: 46, rate: 1.14, wobble: 120, jump: 0.09, squeal: 0.1, vibrato: 20, startLift: 0, endRise: 0 },
+  excited: { speed: 118, wordgap: 0, pitch: 62, rate: 1.18, wobble: 230, jump: 0.3, squeal: 0.45, vibrato: 32, startLift: 150, endRise: 120 },
+  curious: { speed: 104, wordgap: 1, pitch: 54, rate: 1.14, wobble: 140, jump: 0.12, squeal: 0.25, vibrato: 24, startLift: 0, endRise: 480 },
+  confused: { speed: 94, wordgap: 2, pitch: 42, rate: 1.1, wobble: 220, jump: 0.08, squeal: 0, vibrato: 50, startLift: -120, endRise: 200 },
+  surprised: { speed: 118, wordgap: 0, pitch: 70, rate: 1.2, wobble: 190, jump: 0.3, squeal: 0.5, vibrato: 30, startLift: 620, endRise: 0 },
+  teaching: { speed: 98, wordgap: 1, pitch: 44, rate: 1.12, wobble: 60, jump: 0.03, squeal: 0, vibrato: 12, startLift: 0, endRise: 0 },
 };
 
 /** Sample rate of the pitch curve handed to Web Audio (points per second). */

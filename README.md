@@ -150,16 +150,23 @@ text ─► src/voice/text.ts      sentences + mood per sentence; chemistry pron
 
 * **Profile** (`src/voice/profile.ts`): measured from three short reference clips (about 10 s of clear voice once background
   noise is gated out). Target: median pitch about 650 Hz, the middle half between about 525 and 833 Hz, peaks near 1090 Hz,
-  very bright above 4.5 kHz. Rendered output measures a median of 659 Hz, the middle half between 570 and 804 Hz, peaks near
-  1000 Hz, and a tone within about 4 dB of the target from 315 Hz to 8 kHz. Ten seconds cannot train or clone a voice, so
-  this is a designed voice with the same measurable character, not a copy of the recordings.
+  very bright above 4.5 kHz. Rendered output measures a median of about 654 Hz, the middle half between 563 and 778 Hz and
+  peaks near 980 Hz. Ten seconds cannot train or clone a voice, so this is a designed voice with the same measurable
+  character, not a copy of the recordings.
+* **Clarity over mimicry**: explaining sentences are slower, steadier and slightly lower, with a short pause between words
+  and boosted consonants; the wild leaps are kept for short exclamations. Zap is deliberately less buzzy than the references
+  (harmonic-to-noise ratio about 13 dB against 8 dB), because the buzz costs intelligibility.
 * **Moods**: excited, curious, confused, surprised, teaching and neutral, chosen per sentence from wording and punctuation.
 * **Pronunciation**: all 118 element names and the app's science vocabulary were transcribed through the engine; the ones it
   got wrong are fixed in a phoneme dictionary (`PRONUNCIATIONS` in `text.ts`).
 * **Latency**: sentences are synthesised one ahead of playback. Measured in Chromium: about 0.9 s to first sound on first use
   (worker download and start), then roughly 10–90 ms of synthesis per sentence.
 * **Size**: the worker is about 1.9 MB (0.7 MB gzipped) and is fetched only after the first tap with the voice switched on.
-* **Fallback**: without Web Workers or Web Audio, or if the engine fails twice, the browser's built-in speech voice is used.
+* **One voice only**: wherever the engine can run, nothing else ever speaks. The engine starts downloading shortly after the
+  page loads; if it is still not ready 8 s after Zap is asked to speak (slow connection), that one sentence is skipped (it is
+  on screen) rather than read in another voice. A failed sentence is retried once on a fresh engine.
+* **Fallback**: only a browser with no Web Workers or no Web Audio (or three engine crashes in a row) gets the browser's
+  built-in speech voice.
 * **Reliability**: this eSpeak build fails after roughly 80 calls, so each worker is retired after 40 and replaced.
 * **Licence**: meSpeak / eSpeak are GPL. Shipping them means the app's source must stay available under GPL-compatible terms.
 * **Quest / mobile**: uses only Web Workers and Web Audio, which the Meta Quest browser and mobile browsers support. Audio

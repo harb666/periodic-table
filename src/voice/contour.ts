@@ -28,7 +28,6 @@ export interface RateCurve {
 }
 
 const MAX_CENTS = 1100;
-const SQUEAL_CHANCE = 0.3;
 
 /**
  * Build the playback-rate curve for one phrase.
@@ -50,7 +49,7 @@ export function rateCurve(sourceSeconds: number, emotion: Emotion, seed: number)
   let duration = maxSteps * dt;
   const vibratoHz = 6.5 + rand() * 1.5;
   // Now and then a whole phrase sits up in the squeal register, as the reference clips do.
-  const register = rand() < SQUEAL_CHANCE ? 280 + rand() * 220 : 0;
+  const register = rand() < p.squeal ? 280 + rand() * 220 : 0;
   for (let i = 0; i < maxSteps; i++) {
     const t = i * dt;
     if (t >= nextStep) {

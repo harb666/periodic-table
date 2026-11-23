@@ -30,15 +30,23 @@ export function stopSpeaking(): void {
   zapVoice.stop();
 }
 
-/** Browsers only allow audio after a tap or key press; arm the voice on the first one. */
+/**
+ * Browsers only allow audio after a tap or key press; arm the voice on the first one.
+ * (iOS only counts the end of a touch or a click, so listen for those too.)
+ * Also starts downloading the speech engine shortly after the page loads, so the
+ * first sentence does not have to wait for it.
+ */
 export function installVoiceUnlock(): () => void {
   const unlock = () => {
     if (voiceEnabled()) zapVoice.unlock();
   };
-  window.addEventListener('pointerdown', unlock, { passive: true });
-  window.addEventListener('keydown', unlock);
+  const events = ['pointerdown', 'pointerup', 'touchend', 'click', 'keydown'] as const;
+  events.forEach((e) => window.addEventListener(e, unlock, { passive: true }));
+  const warm = setTimeout(() => {
+    if (voiceEnabled()) zapVoice.warm();
+  }, 2500);
   return () => {
-    window.removeEventListener('pointerdown', unlock);
-    window.removeEventListener('keydown', unlock);
+    clearTimeout(warm);
+    events.forEach((e) => window.removeEventListener(e, unlock));
   };
 }
