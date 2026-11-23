@@ -9,6 +9,8 @@ export interface Settings {
   lowEffects: boolean;
   highContrast: boolean;
   mascot: boolean;
+  /** Zap speaks his tips, reactions and tutor answers out loud. */
+  voice: boolean;
   view: ViewMode;
   /** Grown-up opt-in for the online AI tutor (only used if a server proxy exists). */
   onlineTutor: boolean;
@@ -61,6 +63,7 @@ export const DEFAULT_SETTINGS = (): Settings => ({
   lowEffects: isLowPowerDevice(),
   highContrast: false,
   mascot: true,
+  voice: true,
   view: isSmallScreen() ? 'list' : '3d',
   onlineTutor: false,
   largeText: false,

@@ -1,7 +1,7 @@
 import { lazy, Suspense, useEffect, useRef, useState } from 'react';
 import { BY_Z, getContent, prettyConfig } from '../data';
 import { CATEGORY_BY_ID } from '../data/categories';
-import { canSpeak, speak } from '../lib/speech';
+import { canSpeak, speak, stopSpeaking } from '../lib/speech';
 import { sfx } from '../lib/sound';
 import { useSettings, useProgress } from '../state/store';
 import { BohrSVG } from './BohrSVG';
@@ -61,9 +61,12 @@ export function ElementDetail({ z, onClose, onNavigate, onAskTutor, webgl }: { z
     };
   }, [onClose]);
 
+  // Stop any read-aloud when the card closes or moves to another element.
+  useEffect(() => stopSpeaking, [z]);
+
   const sayIt = () => {
     sfx.tap();
-    speak(`${e.name}. ${c?.simple ?? ''}`);
+    speak(`${e.name}. ${c?.simple ?? ''}`, { emotion: 'teaching' });
   };
 
   const fallback = <BohrSVG protons={e.z} neutrons={neutrons} shells={e.shells} label={`Shell diagram of ${e.name}`} />;

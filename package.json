@@ -20,6 +20,7 @@
     "@fontsource/press-start-2p": "^5.2.7",
     "@react-three/drei": "^10.7.6",
     "@react-three/fiber": "^9.4.0",
+    "mespeak": "^2.0.2",
     "react": "^19.2.0",
     "react-dom": "^19.2.0",
     "three": "^0.180.0",

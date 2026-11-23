@@ -3,6 +3,7 @@ import { AppContext, type AppApi, type ModeId } from './state/appContext';
 import { useSettings, settingsStore, markSeen, onStickerEarned } from './state/store';
 import { hasWebGL } from './three/webgl';
 import { sfx } from './lib/sound';
+import { installVoiceUnlock, stopSpeaking } from './lib/speech';
 import { Explore } from './modes/Explore';
 import { AtomBuilder } from './modes/AtomBuilder';
 import { Hunt } from './modes/Hunt';
@@ -50,6 +51,12 @@ export default function App() {
     root.classList.toggle('motion', !settings.reducedMotion);
     root.classList.toggle('no-motion', settings.reducedMotion);
   }, [settings.highContrast, settings.largeText, settings.reducedMotion]);
+
+  useEffect(() => installVoiceUnlock(), []);
+  // Muting or switching the voice off silences Zap mid-sentence.
+  useEffect(() => {
+    if (!settings.sound || !settings.voice) stopSpeaking();
+  }, [settings.sound, settings.voice]);
 
   const toast = useCallback((text: string) => {
     const id = Date.now() + Math.random();

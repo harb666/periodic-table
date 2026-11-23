@@ -2,6 +2,8 @@ import { useCallback, useEffect, useLayoutEffect, useRef, useState } from 'react
 import type { ZapActor, ZapClip } from '../three/ZapActor';
 import { TARGET_SELECTORS, anchorFor, isReachable, lineFor, pickKind, stepToward, type Anchor, type Box, type Point, type TargetKind } from '../lib/mascot';
 import { getZapStage } from '../lib/zapStage';
+import { zapSay } from '../lib/speech';
+import { zapVoice } from '../voice/zapVoice';
 import portraitUrl from '../assets/zap-portrait.png';
 
 const TIPS = [
@@ -98,7 +100,9 @@ export function Mascot({ message, hidden = false, webgl, reducedMotion }: { mess
     return { x: window.innerWidth - MARGIN - w / 2, y: window.innerHeight - MARGIN };
   }, []);
 
-  const say = useCallback((text: string) => {
+  // `voice`: 'ask' = the user just tapped (may interrupt), 'chatter' = his own idea (only if audio is already on).
+  const say = useCallback((text: string, voice: 'ask' | 'chatter' | 'silent' = 'chatter') => {
+    if (voice !== 'silent') zapSay(text, { passive: voice === 'chatter' });
     const el = rootRef.current;
     const h = el?.offsetHeight ?? 150;
     setBubble((b) => ({ text, n: (b?.n ?? 0) + 1, flipX: pos.current.x < 280, below: pos.current.y - h < 110 }));
@@ -142,16 +146,23 @@ export function Mascot({ message, hidden = false, webgl, reducedMotion }: { mess
 
   // Speech: app messages and tips. The bubble tucks itself away so it never covers the table for long.
   useEffect(() => {
-    if (message) say(message);
+    if (message) say(message, 'ask');
   }, [message, say]);
   useEffect(() => {
-    say(TIPS[0]);
+    say(TIPS[0], 'silent');
   }, [say]);
   useEffect(() => {
     if (!bubble) return;
     const t = setTimeout(() => setBubble(null), 6000);
     return () => clearTimeout(t);
   }, [bubble]);
+
+  // His tongue and head bob while he is talking.
+  useEffect(() => {
+    if (!actor) return;
+    actor.setTalking(zapVoice.isSpeaking);
+    return zapVoice.subscribe((speaking) => actor.setTalking(speaking));
+  }, [actor]);
 
   const cheered = useRef(message);
   useEffect(() => {
@@ -297,7 +308,7 @@ export function Mascot({ message, hidden = false, webgl, reducedMotion }: { mess
   const onTap = () => {
     const next = (tip + 1) % TIPS.length;
     setTip(next);
-    say(TIPS[next]);
+    say(TIPS[next], 'ask');
     if (actor) {
       actor.playOnce('Wave');
       if (reducedMotion) actor.update(0.9); // no loop running: show a single waving frame

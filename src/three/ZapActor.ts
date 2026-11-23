@@ -21,6 +21,9 @@ export class ZapActor {
   private yawTarget = 0;
   private look = new THREE.Vector2();
   private lookTarget = new THREE.Vector2();
+  private tongue: THREE.Object3D | null = null;
+  private talking = false;
+  private talkTime = 0;
   private disposed = false;
 
   static async create(canvas: HTMLCanvasElement): Promise<ZapActor> {
@@ -56,6 +59,7 @@ export class ZapActor {
       if (mat.map) mat.color.multiplyScalar(1.8);
     });
     this.head = model.getObjectByName('Head') ?? null;
+    this.tongue = model.getObjectByName('Tongue') ?? null;
 
     this.mixer = new THREE.AnimationMixer(model);
     for (const clip of clips) this.actions.set(clip.name, this.mixer.clipAction(clip));
@@ -113,6 +117,11 @@ export class ZapActor {
     this.lookTarget.set(THREE.MathUtils.clamp(x, -1, 1), THREE.MathUtils.clamp(y, -1, 1));
   }
 
+  /** Chatter motion (tongue flap, small head nods) layered over whatever clip is playing. */
+  setTalking(talking: boolean) {
+    this.talking = talking;
+  }
+
   update(dt: number) {
     if (this.disposed) return;
     this.mixer.update(dt);
@@ -124,6 +133,12 @@ export class ZapActor {
       // Layered on top of whatever the clip did to the head this frame.
       this.head.rotateY(this.look.x * 0.4);
       this.head.rotateX(this.look.y * 0.22);
+    }
+    if (this.talking) {
+      this.talkTime += dt;
+      const t = this.talkTime;
+      this.head?.rotateX(0.05 * Math.sin(t * 17) + 0.03 * Math.sin(t * 7.3));
+      this.tongue?.rotateX(0.45 * Math.sin(t * 21));
     }
     this.renderer.render(this.scene, this.camera);
   }

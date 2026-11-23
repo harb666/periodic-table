@@ -1,7 +1,8 @@
 import { useEffect, useRef, useState } from 'react';
 import { askTutor, checkOnlineTutor, type ChatTurn } from '../tutor/client';
 import type { TutorReply } from '../tutor/offline';
-import { useSettings } from '../state/store';
+import { settingsStore, useSettings } from '../state/store';
+import { canSpeak, stopSpeaking, zapSay } from '../lib/speech';
 import { useApp } from '../state/appContext';
 import { BY_Z } from '../data';
 import { ZapPortrait } from '../components/Mascot';
@@ -44,9 +45,13 @@ export function Tutor() {
     const r = await askTutor(t, { online: settings.onlineTutor, contextZ, history });
     if (r.z) setContextZ(r.z);
     setMsgs((m) => [...m, { role: 'assistant', text: r.text, source: r.source, z: r.z }]);
+    zapSay(r.text, { emotion: 'teaching' });
     setSuggestions(r.suggestions ?? []);
     setBusy(false);
   };
+
+  // Leaving the tutor cuts off an answer in progress.
+  useEffect(() => stopSpeaking, []);
 
   useEffect(() => {
     if (tutorSeed && tutorSeed.n !== seeded.current) {
@@ -71,6 +76,18 @@ export function Tutor() {
             {online ? 'Online AI helper is on (set up by a grown-up).' : 'Offline helper – answers come from our checked chemistry library.'} Zap is a computer program, not a person.
           </p>
         </div>
+        {canSpeak() && (
+          <button
+            className="btn small"
+            aria-pressed={settings.voice && settings.sound}
+            onClick={() => {
+              const on = !(settings.voice && settings.sound);
+              settingsStore.set(on ? { voice: true, sound: true } : { voice: false });
+            }}
+          >
+            {settings.voice && settings.sound ? '🔊 Voice on' : '🔇 Voice off'}
+          </button>
+        )}
       </div>
       <div className="chat" ref={listRef} role="log" aria-live="polite" aria-label="Chat with Zap" style={{ marginTop: 12 }}>
         {msgs.map((m, i) => (

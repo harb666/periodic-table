@@ -48,6 +48,8 @@ Requires Node 20+.
 * **Zap, the mascot**: a rigged 3D character who lives in the corner. Every so often he runs across the screen to an element
   tile (2D or 3D), a mode button, the title or a sticker, bounces on it or points at it, says something true about it and runs
   home. He glances toward the pointer, waves when tapped, and hides while a dialog is open. With reduced motion on he stays put.
+* **Zap's voice**: a custom squeaky robot voice, synthesised in the browser. Zap speaks tutor answers, his tips and reactions,
+  and the "Hear it" read-aloud on every element card. Switch it off in Settings or in the tutor; the mute button silences it too.
 * **Settings**: sound, reduced motion (follows the OS setting), low-effects mode (default on phones and low-core devices), high
   contrast, bigger text and a mascot toggle. Progress is saved in `localStorage` only.
 
@@ -98,6 +100,7 @@ src/
                mascot (where Zap may go and what he says), zapStage (bridge to tiles inside the 3D table)
   assets/      zap.glb (generated, rigged mascot) and zap-portrait.png
   tutor/       offline rule-based tutor + client for the optional proxy
+  voice/       Zap's voice: text planning, pitch contour, eSpeak worker, Web Audio pipeline
   state/       tiny external stores (settings, progress, stickers) + app context
   components/  2D table, card list, element detail dialog, legend, pickers, mascot, decor
   three/       lazy-loaded 3D: TableScene (instanced tiles + canvas label atlas), AtomModel3D, ZapActor, WebGL detection
@@ -105,7 +108,7 @@ src/
 server/        tutor-proxy.mjs (Node http, @anthropic-ai/sdk)
 scripts/       build-elements.mjs (dataset merge + validation), rig-character.mjs (mascot rig + clips)
 assets-src/    zap-character.glb (the unrigged source model)
-tests/         data, logic and UI tests
+tests/         data, logic, UI, mascot rig and voice tests
 ```
 
 ### Performance notes
@@ -133,5 +136,37 @@ The source model (`assets-src/zap-character.glb`) is four static meshes with no 
 
 The output passes the Khronos glTF validator with no errors or warnings, and `tests/mascot.test.ts` re-checks the joint
 hierarchy, inverse bind matrices, weights and clips on every test run. Where WebGL is unavailable the mascot is a still image.
+
+### Zap's voice
+
+Everything runs on the device: no server, no account, no per-use cost, and it works offline once loaded.
+
+```
+text ─► src/voice/text.ts      sentences + mood per sentence; chemistry pronunciations; symbols and formulas spelled out
+     ─► engine.worker.ts       eSpeak (via meSpeak) in a Web Worker, with Zap's own voice definition (pitch range, formants)
+     ─► contour.ts             pitch movement per sentence: register jumps, vibrato, mood shape (as a playback-rate curve)
+     ─► zapVoice.ts            Web Audio: buzz, metallic resonance, brightness, compressor ─► speakers
+```
+
+* **Profile** (`src/voice/profile.ts`): measured from a 12-second reference clip – median pitch about 627 Hz, the middle half
+  between about 520 and 730 Hz, fast pitch jumps. Rendered output measures a median of 612–629 Hz with the middle half between
+  514 and 717 Hz. Twelve seconds cannot train or clone a voice, so this is a designed voice with the same measurable
+  character, not a copy of the recording.
+* **Moods**: excited, curious, confused, surprised, teaching and neutral, chosen per sentence from wording and punctuation.
+* **Pronunciation**: all 118 element names and the app's science vocabulary were transcribed through the engine; the ones it
+  got wrong are fixed in a phoneme dictionary (`PRONUNCIATIONS` in `text.ts`).
+* **Latency**: sentences are synthesised one ahead of playback. Measured in Chromium: about 0.9 s to first sound on first use
+  (worker download and start), then roughly 10–90 ms of synthesis per sentence.
+* **Size**: the worker is about 1.9 MB (0.7 MB gzipped) and is fetched only after the first tap with the voice switched on.
+* **Fallback**: without Web Workers or Web Audio, or if the engine fails twice, the browser's built-in speech voice is used.
+* **Reliability**: this eSpeak build fails after roughly 80 calls, so each worker is retired after 40 and replaced.
+* **Licence**: meSpeak / eSpeak are GPL. Shipping them means the app's source must stay available under GPL-compatible terms.
+* **Quest / mobile**: uses only Web Workers and Web Audio, which the Meta Quest browser and mobile browsers support. Audio
+  starts after the first tap, as browsers require. It has not been run on a headset.
+
+To go further than a designed voice (a neural clone of a specific voice), you would need a server with a GPU, an open model
+such as OpenVoice or GPT-SoVITS (check each model's licence), at least 10–30 minutes of clean, varied speech for fine-tuning
+(or 30–60 seconds for a rough zero-shot attempt), and the right to use that voice. Expect roughly 1–3 s per sentence and the
+cost of keeping a GPU machine running.
 
 See [DATA_SOURCES.md](DATA_SOURCES.md) for data provenance, licences and validation.
