@@ -108,7 +108,7 @@ tests/         data, logic and UI tests
 * **Labels**: drawn once into one canvas texture atlas. They are crisp, and no per-tile text objects are created.
 * **Lazy loading**: Three.js loads in its own chunk, only when the 3D view or an atom model is shown. The first load is about
   120 KB gzipped of JS.
-* **Rendering**: the 3D view renders on demand when motion is off, the tab is hidden or a dialog covers it.
+* **Rendering**: the 3D view renders on demand when motion is off or a dialog covers it. Browsers already pause animation frames in hidden tabs.
 * **Device pixel ratio**: capped at 1.5 in low-effects mode, otherwise 2. Low-effects mode also drops sparkles and antialiasing.
 * **Fallbacks**: if WebGL is unavailable or the context is lost, the app falls back to the 2D table and SVG atom diagrams.
 
