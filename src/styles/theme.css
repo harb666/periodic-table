@@ -30,13 +30,13 @@
 }
 
 * { box-sizing: border-box; }
-html { -webkit-text-size-adjust: 100%; }
+html { -webkit-text-size-adjust: 100%; font-size: var(--fs); }
 body {
   margin: 0;
   background: var(--bg);
   color: var(--text);
   font-family: var(--font-body);
-  font-size: var(--fs);
+  font-size: 1rem;
   line-height: 1.5;
   min-height: 100vh;
   overflow-x: hidden;

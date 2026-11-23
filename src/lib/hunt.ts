@@ -4,6 +4,16 @@ import type { ElementData } from '../data/types';
 import { makeRng, pick } from './rng';
 import { STARTER_Z } from './quiz';
 
+/** First everyday use that doesn't give the answer away (e.g. "Glowing neon signs" for neon). */
+export function safeUse(e: ElementData): string | undefined {
+  const names = [e.name, ...e.altNames].map((n) => n.toLowerCase());
+  const stems = names.map((n) => n.replace(/(ium|um|on|en|ine|ese|ic)$/, '')).filter((s) => s.length >= 4);
+  return getContent(e.z)?.uses.find((u) => {
+    const l = u.toLowerCase();
+    return !names.some((n) => l.includes(n)) && !stems.some((s) => l.includes(s)) && !new RegExp(`\\b${e.symbol.toLowerCase()}\\b`).test(l);
+  });
+}
+
 export interface Hunt {
   z: number;
   clues: string[];
@@ -16,7 +26,7 @@ export function cluesFor(e: ElementData): string[] {
   if (e.phase !== 'unknown') clues.push(`At room temperature I am a ${e.phase}.`);
   if (e.group) clues.push(`I live in period ${e.period}, group ${e.group}.`);
   else clues.push(`I live in one of the two separate rows at the bottom of the table (period ${e.period}).`);
-  const use = getContent(e.z)?.uses[0];
+  const use = safeUse(e);
   if (use) clues.push(`People use me for: ${use}.`);
   clues.push(`My atomic number is between ${Math.max(1, e.z - 5)} and ${Math.min(118, e.z + 5)}.`);
   clues.push(`My symbol starts with the letter "${e.symbol[0]}".`);

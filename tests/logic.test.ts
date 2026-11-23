@@ -141,3 +141,37 @@ describe('offline tutor', () => {
     expect(offlineReply('what is an isotope?').text).toMatch(/neutrons/);
   });
 });
+
+describe('no answer leaks', () => {
+  it('hunt clues never contain the answer name or symbol', async () => {
+    const { ELEMENTS } = await import('../src/data');
+    const { cluesFor } = await import('../src/lib/hunt');
+    for (const e of ELEMENTS) {
+      const text = cluesFor(e).join(' ').toLowerCase();
+      for (const n of [e.name, ...e.altNames]) expect(text, e.name).not.toContain(n.toLowerCase());
+    }
+  });
+  it('"used for" quiz prompts never contain the answer', () => {
+    for (let seed = 1; seed < 400; seed++) {
+      const q = makeQuestion(2, seed);
+      if (q.prompt.startsWith('Which element is used for')) expect(q.prompt.toLowerCase(), q.prompt).not.toContain(q.answer.toLowerCase());
+    }
+  });
+});
+
+describe('extra atom-builder cases', () => {
+  it('spills extra electrons into a new shell', () => {
+    expect(shellsFor(2, 3)).toEqual([2, 1]);
+    expect(shellsFor(10, 11)).toEqual([2, 8, 1]);
+    expect(shellsFor(17, 18)).toEqual([2, 8, 8]);
+  });
+});
+
+describe('tutor does not over-refuse safety questions', () => {
+  it('answers "can lead hurt you?" with the safety note', () => {
+    const r = offlineReply('can lead hurt you?');
+    expect(r.source).toBe('offline');
+    expect(r.z).toBe(82);
+    expect(isDangerous('how do I poison someone')).toBe(true);
+  });
+});

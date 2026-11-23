@@ -22,8 +22,13 @@ material derived from Periodic-Table-JSON, that generated file is shared under *
   hasn't been measured.
 * **Configurations** for Z ≥ 104 are labelled *predicted*. Phase and melting/boiling points are not shown for Z ≥ 100.
 * **Discovery**: the source data mixes up who *named* an element with who *isolated* it in a few places (for example fluorine was
-  listed as Ampère in 1670). These were corrected using standard references and are listed in `DISCOVERY_OVERRIDES` in the build
-  script. Elements known since antiquity show "Known since ancient times".
+  listed as Ampère in 1670). About 30 entries were corrected from well-known chemistry history and are listed in
+  `DISCOVERY_OVERRIDES` in the build script. **Limitation:** these corrections were not machine-checked against a single
+  reference during the build (the reference sites weren't reachable from the build environment). Please review them before
+  publishing. Disputed discoveries (for example nobelium, credited by IUPAC to Dubna in 1966) use the IUPAC-credited lab.
+  Elements known since antiquity show "Known since ancient times".
+* **Superheavy mass numbers** (Z ≥ 103) come from PubChem isotope masses rounded to whole numbers. Oganesson is set to [294],
+  because Og-294 is the only isotope that has been observed. Values for the newest elements may change as research continues.
 
 ## Curated learning content
 

@@ -17,9 +17,10 @@ function nucleusPositions(count: number): THREE.Vector3[] {
   const r0 = 0.16;
   for (let i = 0; i < count; i++) {
     const radius = r0 * Math.cbrt(i + 1) * 1.15;
-    const y = 1 - ((i * 0.618) % 1) * 2;
+    // R2 low-discrepancy sequence → evenly scattered directions (no spiral artefacts)
+    const y = 1 - ((i * 0.7548776662 + 0.5) % 1) * 2;
     const rr = Math.sqrt(1 - y * y);
-    const theta = i * 2.39996;
+    const theta = 2 * Math.PI * ((i * 0.5698402910 + 0.5) % 1);
     pts.push(new THREE.Vector3(Math.cos(theta) * rr * radius, y * radius, Math.sin(theta) * rr * radius));
   }
   return pts;
@@ -88,7 +89,7 @@ function Shell({ index, count, radius, motion }: { index: number; count: number;
 export default function AtomModel3D({ protons, neutrons, shells, motion, low }: Props) {
   const nucleusR = 0.16 * Math.cbrt(Math.min(protons + neutrons, low ? 60 : 120)) * 1.2;
   const outer = nucleusR + 0.45 + Math.max(shells.length - 1, 0) * 0.42;
-  const dist = Math.max(5, (outer + 0.6) / Math.tan((22.5 * Math.PI) / 180));
+  const dist = Math.max(5, ((outer + 0.6) * 1.25) / Math.tan((22.5 * Math.PI) / 180));
   return (
     <Canvas
       dpr={low ? [1, 1.5] : [1, 2]}

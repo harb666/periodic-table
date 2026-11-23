@@ -159,7 +159,7 @@ export function ElementDetail({ z, onClose, onNavigate, onAskTutor, webgl }: { z
                       </div>
                     }
                   >
-                    <AtomModel3D protons={e.z} neutrons={neutrons} shells={e.shells} motion={!settings.reducedMotion} low={settings.lowEffects} />
+                    <AtomModel3D key={e.z} protons={e.z} neutrons={neutrons} shells={e.shells} motion={!settings.reducedMotion} low={settings.lowEffects} />
                   </Suspense>
                 </ErrorBoundary>
               ) : (

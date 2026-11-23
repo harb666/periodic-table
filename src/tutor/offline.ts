@@ -14,7 +14,8 @@ export interface TutorReply {
 const DANGER = [
   /\b(explo(de|sion|sive)s?|bomb|blow (it|something|up)|fire ?work|set .* on fire|burn (it|something|down)|light (a|it) .*fire)\b/i,
   /\b(mix|combine|make|cook|brew)\b.*\b(at home|myself|in my|kitchen|bathroom|garage|bleach|chemicals?)\b/i,
-  /\b(poison|toxic gas|hurt|kill|weapon)\b/i,
+  /\b(make|build|create|get|use)\b.*\b(poison|toxic gas|weapon)\b/i,
+  /\b(hurt|kill|poison)\b.*\b(someone|somebody|people|person|my (brother|sister|friend|mum|mom|dad|teacher)|him|her|them|animals?|cat|dog)\b/i,
   /\b(eat|drink|taste|swallow|lick|sniff|smell)\b.*\b(element|chemical|metal|mercury|lead|battery|bleach|acid)\b/i,
   /\bhow (do|can) i (make|get|buy)\b.*\b(uranium|plutonium|sodium|potassium|mercury|acid|chlorine|radioactive)\b/i,
 ];
@@ -143,7 +144,7 @@ function elementReply(e: ElementData, text: string): TutorReply {
   const cat = CATEGORY_BY_ID[e.category];
   const t = text.toLowerCase();
   let reply: string;
-  if (/\b(danger|safe|toxic|poison|harm)/.test(t)) reply = c?.safety ?? `${e.name} isn't known as especially dangerous, but remember: never touch or taste chemicals – ask a grown-up!`;
+  if (/\b(danger|safe|toxic|poison|harm|hurt|kill)/.test(t)) reply = c?.safety ?? `${e.name} isn't known as especially dangerous, but remember: never touch or taste chemicals – ask a grown-up!`;
   else if (/\b(use|used|for|everyday|where)\b/.test(t)) reply = `${e.name} is used for: ${c?.uses.join(', ') ?? 'scientific research'}.`;
   else if (/\b(fact|cool|fun|interesting)\b/.test(t)) reply = c?.facts[Math.floor(Math.random() * 3)] ?? `${e.name} is element ${e.z}.`;
   else if (/\bsymbol\b/.test(t)) reply = `The symbol for ${e.name} is ${e.symbol}.`;

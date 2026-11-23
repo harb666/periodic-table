@@ -1452,7 +1452,7 @@ export const ELEMENTS: ElementData[] = [
   "phase": "solid",
   "meltK": 429.75,
   "boilK": 2345,
-  "discoveredBy": "Ferdinand Reich and Hieronymous Theodor Richter",
+  "discoveredBy": "Ferdinand Reich and Hieronymus Theodor Richter",
   "namedBy": null,
   "year": 1863,
   "yearText": "1863"
@@ -3161,8 +3161,8 @@ export const ELEMENTS: ElementData[] = [
   "boilK": null,
   "discoveredBy": "Joint Institute for Nuclear Research (Dubna, Russia)",
   "namedBy": null,
-  "year": 1957,
-  "yearText": "1957"
+  "year": 1966,
+  "yearText": "1966"
  },
  {
   "z": 103,
@@ -3664,8 +3664,8 @@ export const ELEMENTS: ElementData[] = [
   "symbol": "Og",
   "name": "Oganesson",
   "altNames": [],
-  "mass": 295,
-  "massText": "[295]",
+  "mass": 294,
+  "massText": "[294]",
   "massIsMassNumber": true,
   "category": "unknown",
   "period": 7,

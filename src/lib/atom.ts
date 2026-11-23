@@ -96,9 +96,16 @@ export function shellsFor(protons: number, electrons: number): number[] {
     if (shells[last] === 0) shells.pop();
     diff++;
   }
-  if (diff > 0) {
-    if (!shells.length) shells.push(0);
-    shells[shells.length - 1] += diff;
+  // Extra electrons go into the outer shell; once it is full (2 for the first shell, 8 otherwise in this simple model) they start a new shell.
+  while (diff > 0) {
+    const last = shells.length - 1;
+    const cap = last === 0 ? 2 : 8;
+    if (last < 0 || shells[last] >= Math.max(cap, shells[last])) shells.push(0);
+    const i = shells.length - 1;
+    const room = (i === 0 ? 2 : 8) - shells[i];
+    const add = room > 0 ? Math.min(room, diff) : diff;
+    shells[i] += add;
+    diff -= add;
   }
   return shells;
 }

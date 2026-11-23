@@ -1,7 +1,8 @@
-import { ELEMENTS, BY_Z, getContent } from '../data';
+import { ELEMENTS, BY_Z } from '../data';
 import { CATEGORY_BY_ID } from '../data/categories';
 import type { ElementData } from '../data/types';
 import { makeRng, pick, shuffle } from './rng';
+import { safeUse } from './hunt';
 
 export interface QuizQuestion {
   id: string;
@@ -88,9 +89,8 @@ const periodQ: Gen = (rng, e) => {
 };
 
 const usesQ: Gen = (rng, e) => {
-  const c = getContent(e.z);
-  if (!c || !c.uses.length) return null;
-  const use = c.uses[0];
+  const use = safeUse(e);
+  if (!use) return null;
   const candidates = STARTER_Z.filter((z) => z !== e.z).map((z) => BY_Z[z].name);
   return {
     prompt: `Which element is used for: "${use}"?`,

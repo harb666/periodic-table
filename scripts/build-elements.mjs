@@ -61,7 +61,7 @@ const DISCOVERY_OVERRIDES = {
   37: { year: 1861, by: 'Robert Bunsen and Gustav Kirchhoff' },
   44: { year: 1844, by: 'Karl Ernst Claus' },
   48: { year: 1817, by: 'Friedrich Stromeyer' },
-  49: { year: 1863, by: 'Ferdinand Reich and Hieronymous Theodor Richter' },
+  49: { year: 1863, by: 'Ferdinand Reich and Hieronymus Theodor Richter' },
   54: { year: 1898, by: 'William Ramsay and Morris Travers' },
   55: { year: 1860, by: 'Robert Bunsen and Gustav Kirchhoff' },
   56: { year: 1774, by: 'Carl Wilhelm Scheele' },
@@ -75,6 +75,7 @@ const DISCOVERY_OVERRIDES = {
   89: { year: 1899, by: 'André-Louis Debierne' },
   91: { year: 1913, by: 'Kasimir Fajans and Oswald Göhring' },
   93: { year: 1940, by: 'Edwin McMillan and Philip Abelson' },
+  102: { year: 1966, by: 'Joint Institute for Nuclear Research (Dubna, Russia)' },
   107: { year: 1981, by: 'GSI Helmholtz Centre (Darmstadt, Germany)' },
 };
 // Make lab names friendlier / consistent.
@@ -97,6 +98,8 @@ for (let i = 0; i < 118; i++) {
     massIsMassNumber = true;
     // For Z >= 103 the andrejewski values are older; use the (newer) PubChem isotope mass rounded to a mass number.
     mass = z >= 103 ? Math.round(Number(p.AtomicMass)) : Number(am.slice(1, -1));
+    // Oganesson: only Og-294 has been observed; PubChem lists 295.
+    if (z === 118) mass = 294;
     massText = `[${mass}]`;
   } else {
     const v = am.replace(/\(.*\)/, '');

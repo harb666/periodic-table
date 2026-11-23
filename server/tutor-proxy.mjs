@@ -88,7 +88,7 @@ async function handleTutor(req, res) {
   try {
     const response = await client.beta.messages.create({
       model: MODEL,
-      max_tokens: 1024,
+      max_tokens: 16000,
       system: SYSTEM,
       output_config: { effort: 'low' },
       betas: ['server-side-fallback-2026-07-01'],
@@ -98,6 +98,7 @@ async function handleTutor(req, res) {
     if (response.stop_reason === 'refusal') {
       return json(res, 200, { text: "Let's talk about something else in chemistry! Which element should we explore?" });
     }
+    if (response.stop_reason === 'max_tokens') console.warn('Tutor reply hit max_tokens');
     const text = response.content
       .filter((b) => b.type === 'text')
       .map((b) => b.text)

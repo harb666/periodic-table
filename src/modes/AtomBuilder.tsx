@@ -121,7 +121,7 @@ export function AtomBuilder() {
           {webgl && atom.protons > 0 ? (
             <ErrorBoundary fallback={visual}>
               <Suspense fallback={visual}>
-                <AtomModel3D protons={atom.protons} neutrons={atom.neutrons} shells={a.shells} motion={!settings.reducedMotion} low={settings.lowEffects} />
+                <AtomModel3D key={a.shells.length} protons={atom.protons} neutrons={atom.neutrons} shells={a.shells} motion={!settings.reducedMotion} low={settings.lowEffects} />
               </Suspense>
             </ErrorBoundary>
           ) : (

@@ -179,7 +179,7 @@ function Tiles(props: TableSceneProps) {
       tmp.so.setScalar(a.scale * (active ? 1.1 : 1.045));
       tmp.m.compose(tmp.p, tmp.q, tmp.so);
       o.setMatrixAt(i, tmp.m);
-      tmp.p.z += TILE_D / 2 + 0.006;
+      tmp.p.z += (TILE_D / 2) * a.scale + 0.008;
       tmp.m.compose(tmp.p, tmp.q, tmp.s);
       l.setMatrixAt(i, tmp.m);
       labelAttrs.dim.setX(i, dimmed ? 0.35 : 1);
@@ -267,6 +267,7 @@ function CameraRig({ resetKey, locked }: { resetKey: number; locked: boolean }) 
   const size = useThree((s) => s.size);
   const controls = useThree((s) => s.controls) as unknown as OrbitControlsImpl | null;
   const invalidate = useThree((s) => s.invalidate);
+  const scene = useThree((s) => s.scene);
   useEffect(() => {
     // Fit the 18-column table to the viewport width (or height on tall screens).
     const aspect = size.width / size.height;
@@ -277,6 +278,11 @@ function CameraRig({ resetKey, locked }: { resetKey: number; locked: boolean }) 
     const distW = halfW / (Math.tan(vFov / 2) * aspect);
     const dist = Math.max(distH, distW) * 1.02;
     camera.position.set(0, locked ? 0 : -0.8, dist);
+    const fog = scene.fog as THREE.Fog | null;
+    if (fog) {
+      fog.near = dist + 8;
+      fog.far = dist + 50;
+    }
     camera.lookAt(0, 0, 0);
     if (controls) {
       controls.target.set(0, 0, 0);
@@ -284,7 +290,7 @@ function CameraRig({ resetKey, locked }: { resetKey: number; locked: boolean }) 
       controls.update();
     }
     invalidate();
-  }, [resetKey, locked, size.width, size.height, camera, controls, invalidate]);
+  }, [resetKey, locked, size.width, size.height, camera, controls, invalidate, scene]);
   return null;
 }
 
@@ -337,6 +343,9 @@ export default function TableScene(props: TableSceneProps) {
         maxAzimuthAngle={Math.PI / 3}
         enableDamping={motion}
         screenSpacePanning
+        // In the locked straight-on view, one finger / left mouse slides the table instead of spinning it.
+        mouseButtons={locked ? { LEFT: THREE.MOUSE.PAN, MIDDLE: THREE.MOUSE.DOLLY, RIGHT: THREE.MOUSE.PAN } : { LEFT: THREE.MOUSE.ROTATE, MIDDLE: THREE.MOUSE.DOLLY, RIGHT: THREE.MOUSE.PAN }}
+        touches={locked ? { ONE: THREE.TOUCH.PAN, TWO: THREE.TOUCH.DOLLY_PAN } : { ONE: THREE.TOUCH.ROTATE, TWO: THREE.TOUCH.DOLLY_PAN }}
       />
       <CameraRig resetKey={resetKey} locked={locked} />
     </Canvas>
