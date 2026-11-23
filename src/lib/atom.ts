@@ -77,8 +77,7 @@ export interface AtomAnalysis {
 
 export function chargeText(charge: number): string {
   if (charge === 0) return '0 (neutral)';
-  const sign = charge > 0 ? '+' : '−';
-  return `${Math.abs(charge) === 1 ? '' : Math.abs(charge)}${sign}`;
+  return `${charge > 0 ? '+' : '−'}${Math.abs(charge)}`;
 }
 
 /**
@@ -158,7 +157,7 @@ export function analyseAtom({ protons, neutrons, electrons }: AtomState): AtomAn
         kind: 'not-in-list',
         text: `${el.name}-${massNumber} is not one of the stable isotopes we know about (${list
           .map((m) => `${el.name}-${m}`)
-          .join(', ')}). An atom like this would be radioactive – or might never have been seen at all.`,
+          .join(', ')}). An atom like this is unstable (radioactive) – or may not exist at all.`,
       };
     }
   } else {

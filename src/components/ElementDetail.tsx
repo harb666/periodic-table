@@ -113,7 +113,9 @@ export function ElementDetail({ z, onClose, onNavigate, onAskTutor, webgl }: { z
         <div className="facts-grid">
           <div className="stat">
             <div className="k">Atomic number</div>
-            <div className="v">{e.z} protons</div>
+            <div className="v">
+              {e.z} proton{e.z === 1 ? '' : 's'}
+            </div>
           </div>
           <div className="stat">
             <div className="k">{e.massIsMassNumber ? 'Mass number*' : 'Atomic mass'}</div>

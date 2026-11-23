@@ -100,6 +100,15 @@ function ReactionView({ r }: { r: Reaction }) {
           <Molecules terms={r.right} />
         </div>
       </div>
+      <p className="row" style={{ gap: 12, fontSize: '0.85rem', margin: '6px 0 0' }} aria-label="Colour key">
+        {symbols.map((s) => (
+          <span key={s} className="row" style={{ gap: 4 }}>
+            <span aria-hidden="true" style={{ width: 12, height: 12, borderRadius: '50%', background: ATOM_COLORS[s] ?? '#ccc', display: 'inline-block' }} />
+            {BY_SYMBOL[s].name}
+          </span>
+        ))}
+        <span className="muted">· {ran ? 'after the reaction' : 'before the reaction'}</span>
+      </p>
       <div className="row" style={{ margin: '10px 0' }}>
         <button className="btn primary" onClick={run} disabled={ran}>
           ▶ Run simulation

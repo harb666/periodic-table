@@ -78,6 +78,19 @@ export function Explore({ detailOpen }: { detailOpen: boolean }) {
       {highlight && <p className="note">{CATEGORY_BY_ID[highlight].blurb}</p>}
 
       {view === '3d' && (
+        <div className="row" style={{ marginBottom: 8 }}>
+          <button className="icon-btn" aria-pressed={locked} onClick={() => setLocked((l) => !l)} title="Lock a straight-on view">
+            {locked ? '🔒 Straight view' : '🔓 Free spin'}
+          </button>
+          <button className="icon-btn" onClick={() => setResetKey((k) => k + 1)}>
+            ⟲ Reset camera
+          </button>
+          <span className="muted" style={{ fontSize: '0.85rem' }}>
+            {locked ? 'Pinch or scroll to zoom · drag to slide · tap a tile' : 'Drag to spin · pinch or scroll to zoom · tap a tile'}
+          </span>
+        </div>
+      )}
+      {view === '3d' && (
         <div className="stage">
           <ErrorBoundary
             onError={fail3d}
@@ -116,15 +129,6 @@ export function Explore({ detailOpen }: { detailOpen: boolean }) {
               {hover.z}. {hover.name}
             </div>
           )}
-          <p className="stage-hint">{locked ? 'Pinch to zoom · drag to slide · tap a tile' : 'Drag to spin · pinch to zoom · tap a tile'}</p>
-          <div className="stage-controls">
-            <button className="icon-btn" aria-pressed={locked} onClick={() => setLocked((l) => !l)} title="Lock a straight-on view">
-              {locked ? '🔒 Straight' : '🔓 Free'}
-            </button>
-            <button className="icon-btn" onClick={() => setResetKey((k) => k + 1)}>
-              ⟲ Reset
-            </button>
-          </div>
           <button className="sr-only" onClick={() => setView('2d')} style={{ position: 'absolute' }}>
             The 3D view is visual only. Switch to the keyboard-friendly table view.
           </button>

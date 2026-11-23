@@ -66,7 +66,7 @@ function Shell({ index, count, radius, motion }: { index: number; count: number;
   });
   return (
     <group rotation={tilt}>
-      <mesh rotation={[Math.PI / 2, 0, 0]}>
+      <mesh>
         <torusGeometry args={[radius, 0.012, 6, 96]} />
         <meshBasicMaterial color="#00f5ff" transparent opacity={0.5} />
       </mesh>

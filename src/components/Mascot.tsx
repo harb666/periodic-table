@@ -37,7 +37,13 @@ export function MascotSvg() {
 export function Mascot({ message }: { message?: string | null }) {
   const [tip, setTip] = useState(0);
   const [hidden, setHidden] = useState(false);
-  useEffect(() => setHidden(false), [message]);
+  useEffect(() => setHidden(false), [message, tip]);
+  // The speech bubble tucks itself away so it never covers the table for long.
+  useEffect(() => {
+    if (hidden) return;
+    const t = setTimeout(() => setHidden(true), 6000);
+    return () => clearTimeout(t);
+  }, [hidden, message, tip]);
   return (
     <div className="mascot">
       {!hidden && (
@@ -47,10 +53,7 @@ export function Mascot({ message }: { message?: string | null }) {
       )}
       <button
         className="bot"
-        onClick={() => {
-          setHidden(false);
-          setTip((t) => (t + 1) % TIPS.length);
-        }}
+        onClick={() => setTip((t) => (t + 1) % TIPS.length)}
         aria-label="Zap the chemistry bot: show another tip"
         title="Tap me for a tip"
       >

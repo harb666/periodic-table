@@ -171,6 +171,11 @@ button { cursor: pointer; }
   font-size: 0.82rem; font-weight: 800;
 }
 .legend button[aria-pressed='true'] { background: var(--c); color: #000; }
+@media (max-width: 760px) {
+  .legend { flex-wrap: nowrap; overflow-x: auto; padding-bottom: 6px; -webkit-overflow-scrolling: touch; }
+  .legend li { flex: 0 0 auto; }
+  .stage { height: 62vh; }
+}
 .legend .sw { width: 12px; height: 12px; border-radius: 4px; background: var(--c); box-shadow: 0 0 8px var(--c); }
 
 /* ---------- 2D periodic table ---------- */
@@ -235,9 +240,9 @@ button { cursor: pointer; }
   background: #050307;
 }
 .stage canvas { touch-action: none; }
-.stage-controls { position: absolute; right: 10px; bottom: 10px; display: flex; gap: 8px; flex-wrap: wrap; justify-content: flex-end; z-index: 2; }
+.stage-controls { position: absolute; right: 10px; top: 10px; display: flex; gap: 8px; flex-wrap: wrap; justify-content: flex-end; z-index: 2; }
 .stage-hint { position: absolute; left: 12px; bottom: 12px; font-size: 0.8rem; color: var(--muted); background: rgba(0,0,0,.6); padding: 6px 10px; border-radius: 10px; z-index: 2; max-width: 55%; }
-.stage-hover { position: absolute; left: 12px; top: 12px; z-index: 2; background: rgba(8,8,8,.85); border: 2px solid var(--c, var(--cyan)); border-radius: 12px; padding: 6px 12px; font-weight: 800; pointer-events: none; }
+.stage-hover { position: absolute; left: 50%; transform: translateX(-50%); top: 12px; z-index: 2; background: rgba(8,8,8,.85); border: 2px solid var(--c, var(--cyan)); border-radius: 12px; padding: 6px 12px; font-weight: 800; pointer-events: none; }
 .loading { display: grid; place-items: center; height: 100%; min-height: 200px; text-align: center; gap: 10px; color: var(--muted); }
 .spinner { width: 46px; height: 46px; border-radius: 50%; border: 5px solid rgba(255,20,147,.25); border-top-color: var(--pink); animation: spin 0.9s linear infinite; }
 @keyframes spin { to { transform: rotate(360deg); } }

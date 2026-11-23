@@ -36,7 +36,7 @@ function layout() {
   const colors: THREE.Color[] = [];
   const toXY = (col: number, row: number) => {
     const r = row <= 7 ? row : row + 0.45;
-    return new THREE.Vector3((col - 9.5) * SX, -(r - 5.2) * SY, 0);
+    return new THREE.Vector3((col - 9.5) * SX, -(r - 5.72) * SY, 0);
   };
   ELEMENTS.forEach((e) => {
     pos.push(toXY(e.col, e.row));
@@ -185,6 +185,8 @@ function Tiles(props: TableSceneProps) {
       labelAttrs.dim.setX(i, dimmed ? 0.35 : 1);
     }
     b.instanceMatrix.needsUpdate = true;
+    // Bounding sphere is cached by three.js; reset it so raycasts use the current tile positions.
+    b.boundingSphere = null;
     o.instanceMatrix.needsUpdate = true;
     l.instanceMatrix.needsUpdate = true;
     labelAttrs.dim.needsUpdate = true;
@@ -254,7 +256,7 @@ const floorVert = /* glsl */ `
 function Floor() {
   const mat = useMemo(() => new THREE.ShaderMaterial({ vertexShader: floorVert, fragmentShader: floorFrag }), []);
   return (
-    <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, -8.2, 0]} material={mat}>
+    <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, -7.6, 0]} material={mat}>
       <planeGeometry args={[90, 90]} />
     </mesh>
   );
@@ -268,13 +270,13 @@ function CameraRig({ resetKey, locked }: { resetKey: number; locked: boolean }) 
   useEffect(() => {
     // Fit the 18-column table to the viewport width (or height on tall screens).
     const aspect = size.width / size.height;
-    const halfW = 10.8;
-    const halfH = 7.6;
+    const halfW = 10.4;
+    const halfH = 6.6;
     const vFov = (camera.fov * Math.PI) / 180;
     const distH = halfH / Math.tan(vFov / 2);
     const distW = halfW / (Math.tan(vFov / 2) * aspect);
     const dist = Math.max(distH, distW) * 1.02;
-    camera.position.set(0, locked ? 0 : -1.2, dist);
+    camera.position.set(0, locked ? 0 : -0.8, dist);
     camera.lookAt(0, 0, 0);
     if (controls) {
       controls.target.set(0, 0, 0);

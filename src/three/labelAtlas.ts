@@ -25,7 +25,7 @@ export function drawAtlas(highContrast: boolean, maxSize = ATLAS_SIZE): THREE.Ca
   ctx.scale(scale, scale);
   const fg = highContrast ? '#000' : '#fff';
   const stroke = highContrast ? 'rgba(255,255,255,0)' : 'rgba(0,0,0,0.85)';
-  const draw = (i: number, top: string, mid: string, bottom: string, midSize = 78) => {
+  const draw = (i: number, top: string, mid: string, bottom: string, midSize = 84) => {
     const x = (i % ATLAS_COLS) * CELL;
     const y = Math.floor(i / ATLAS_COLS) * CELL;
     ctx.save();
@@ -36,10 +36,10 @@ export function drawAtlas(highContrast: boolean, maxSize = ATLAS_SIZE): THREE.Ca
     ctx.textBaseline = 'middle';
     // atomic number
     ctx.textAlign = 'left';
-    ctx.font = `800 30px Nunito, system-ui, sans-serif`;
+    ctx.font = `800 36px Nunito, system-ui, sans-serif`;
     ctx.lineWidth = 6;
-    ctx.strokeText(top, 14, 28);
-    ctx.fillText(top, 14, 28);
+    ctx.strokeText(top, 14, 30);
+    ctx.fillText(top, 14, 30);
     // symbol
     ctx.textAlign = 'center';
     ctx.font = `900 ${midSize}px Orbitron, Nunito, system-ui, sans-serif`;
@@ -47,15 +47,15 @@ export function drawAtlas(highContrast: boolean, maxSize = ATLAS_SIZE): THREE.Ca
     ctx.strokeText(mid, CELL / 2, CELL / 2 + 4);
     ctx.fillText(mid, CELL / 2, CELL / 2 + 4);
     // name (shrink to fit)
-    let fs = 26;
+    let fs = 32;
     ctx.font = `800 ${fs}px Nunito, system-ui, sans-serif`;
     while (ctx.measureText(bottom).width > CELL - 16 && fs > 14) {
       fs -= 1;
       ctx.font = `800 ${fs}px Nunito, system-ui, sans-serif`;
     }
     ctx.lineWidth = 5;
-    ctx.strokeText(bottom, CELL / 2, CELL - 26);
-    ctx.fillText(bottom, CELL / 2, CELL - 26);
+    ctx.strokeText(bottom, CELL / 2, CELL - 28);
+    ctx.fillText(bottom, CELL / 2, CELL - 28);
     ctx.restore();
   };
   ELEMENTS.forEach((e, i) => draw(i, String(e.z), e.symbol, e.name));

@@ -26,10 +26,10 @@ describe('atom builder', () => {
     const na = analyseAtom({ protons: 11, neutrons: 12, electrons: 10 });
     expect(na.charge).toBe(1);
     expect(na.ionType).toBe('cation');
-    expect(na.chargeText).toBe('+');
+    expect(na.chargeText).toBe('+1');
     const o = analyseAtom({ protons: 8, neutrons: 8, electrons: 10 });
     expect(o.ionType).toBe('anion');
-    expect(o.chargeText).toBe('2−');
+    expect(o.chargeText).toBe('−2');
     expect(chargeText(0)).toMatch(/neutral/);
   });
   it('builds simplified shells for ions', () => {
