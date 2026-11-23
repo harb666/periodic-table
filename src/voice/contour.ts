@@ -27,7 +27,8 @@ export interface RateCurve {
   duration: number;
 }
 
-const MAX_CENTS = 900;
+const MAX_CENTS = 1100;
+const SQUEAL_CHANCE = 0.3;
 
 /**
  * Build the playback-rate curve for one phrase.
@@ -48,19 +49,21 @@ export function rateCurve(sourceSeconds: number, emotion: Emotion, seed: number)
   let nextStep = 0;
   let duration = maxSteps * dt;
   const vibratoHz = 6.5 + rand() * 1.5;
+  // Now and then a whole phrase sits up in the squeal register, as the reference clips do.
+  const register = rand() < SQUEAL_CHANCE ? 280 + rand() * 220 : 0;
   for (let i = 0; i < maxSteps; i++) {
     const t = i * dt;
     if (t >= nextStep) {
       // A new note roughly every syllable or two; sometimes a leap to another register.
       const leap = rand() < p.jump;
-      target = leap ? (rand() < 0.7 ? 1 : -0.6) * (380 + rand() * 320) : (rand() * 2 - 1) * p.wobble;
+      target = leap ? (rand() < 0.7 ? 1 : -0.6) * (450 + rand() * 500) : (rand() * 2 - 1) * p.wobble;
       nextStep = t + 0.14 + rand() * 0.22;
     }
     level += (target - level) * 0.45; // ≈ 40 ms glide between notes
     const u = Math.min(1, t / nominal);
     const shape = p.startLift * Math.exp(-t / 0.22) + p.endRise * Math.max(0, (u - 0.66) / 0.34) ** 1.5;
     const vibrato = p.vibrato * Math.sin(2 * Math.PI * vibratoHz * t);
-    const cents = Math.max(-MAX_CENTS, Math.min(MAX_CENTS, level + shape + vibrato));
+    const cents = Math.max(-MAX_CENTS, Math.min(MAX_CENTS, register + level + shape + vibrato));
     const rate = p.rate * 2 ** (cents / 1200);
     values.push(rate);
     consumed += rate * dt;

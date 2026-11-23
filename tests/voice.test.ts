@@ -93,8 +93,8 @@ describe('pitch contour', () => {
       const { values } = rateCurve(3, emotion, 99);
       const base = EMOTIONS[emotion].rate;
       for (const v of values) {
-        expect(v).toBeGreaterThan(base * 0.59);
-        expect(v).toBeLessThan(base * 1.69);
+        expect(v).toBeGreaterThan(base * 0.52);
+        expect(v).toBeLessThan(base * 1.89);
       }
     }
     const mean = (xs: Float32Array, from: number, to: number) => xs.slice(Math.floor(xs.length * from), Math.floor(xs.length * to)).reduce((s, v) => s + v, 0) / (Math.floor(xs.length * to) - Math.floor(xs.length * from));

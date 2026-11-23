@@ -148,10 +148,11 @@ text ─► src/voice/text.ts      sentences + mood per sentence; chemistry pron
      ─► zapVoice.ts            Web Audio: buzz, metallic resonance, brightness, compressor ─► speakers
 ```
 
-* **Profile** (`src/voice/profile.ts`): measured from a 12-second reference clip – median pitch about 627 Hz, the middle half
-  between about 520 and 730 Hz, fast pitch jumps. Rendered output measures a median of 612–629 Hz with the middle half between
-  514 and 717 Hz. Twelve seconds cannot train or clone a voice, so this is a designed voice with the same measurable
-  character, not a copy of the recording.
+* **Profile** (`src/voice/profile.ts`): measured from three short reference clips (about 10 s of clear voice once background
+  noise is gated out). Target: median pitch about 650 Hz, the middle half between about 525 and 833 Hz, peaks near 1090 Hz,
+  very bright above 4.5 kHz. Rendered output measures a median of 659 Hz, the middle half between 570 and 804 Hz, peaks near
+  1000 Hz, and a tone within about 4 dB of the target from 315 Hz to 8 kHz. Ten seconds cannot train or clone a voice, so
+  this is a designed voice with the same measurable character, not a copy of the recordings.
 * **Moods**: excited, curious, confused, surprised, teaching and neutral, chosen per sentence from wording and punctuation.
 * **Pronunciation**: all 118 element names and the app's science vocabulary were transcribed through the engine; the ones it
   got wrong are fixed in a phoneme dictionary (`PRONUNCIATIONS` in `text.ts`).

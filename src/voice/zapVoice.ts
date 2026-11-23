@@ -34,11 +34,17 @@ export function buildVoiceChain(ctx: AudioCtx): { input: AudioNode; output: Audi
   feedback.gain.value = 0.36;
   const wet = ctx.createGain();
   wet.gain.value = 0.26;
-  // The reference is bright around 3–5 kHz.
+  // Tone matched to the pooled reference clips: a little less body around 500 Hz,
+  // and much more air above 4.5 kHz (the references are very bright up there).
+  const body = ctx.createBiquadFilter();
+  body.type = 'peaking';
+  body.frequency.value = 510;
+  body.Q.value = 1.6;
+  body.gain.value = -2.5;
   const shelf = ctx.createBiquadFilter();
   shelf.type = 'highshelf';
-  shelf.frequency.value = 2800;
-  shelf.gain.value = 3.5;
+  shelf.frequency.value = 4800;
+  shelf.gain.value = 9;
   const compressor = ctx.createDynamicsCompressor();
   compressor.threshold.value = -18;
   compressor.ratio.value = 4;
@@ -57,11 +63,11 @@ export function buildVoiceChain(ctx: AudioCtx): { input: AudioNode; output: Audi
   lfo.start();
 
   input.connect(highpass).connect(buzz);
-  buzz.connect(dry).connect(shelf);
+  buzz.connect(dry).connect(body);
   buzz.connect(delay);
   delay.connect(feedback).connect(delay);
-  delay.connect(wet).connect(shelf);
-  shelf.connect(compressor).connect(output);
+  delay.connect(wet).connect(body);
+  body.connect(shelf).connect(compressor).connect(output);
   return { input, output };
 }
 

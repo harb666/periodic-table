@@ -1,11 +1,11 @@
 // Zap's voice profile.
 //
-// The numbers come from measuring the supplied reference clip (12 s): median
-// pitch ≈ 627 Hz, middle half of the pitch between ≈ 520 and 730 Hz, peaks near
-// 890 Hz, constant fast pitch jumps, about 4 syllables a second, and most energy
-// between 500 and 1500 Hz with a bright band at 3–5 kHz. The clip is far too
-// short to train or clone a voice from, so this is a designed synthetic voice
-// with the same measurable character – not a copy of the recording.
+// The numbers come from measuring three short reference clips (about 10 s of
+// clear voice once background noise is gated out): median pitch ≈ 650 Hz, the
+// middle half between ≈ 525 and 833 Hz, peaks near 1090 Hz, frequent leaps
+// between registers, and a very bright tone above 4.5 kHz. That is far too
+// little to train or clone a voice from, so this is a designed synthetic voice
+// with the same measurable character – not a copy of the recordings.
 
 export type Emotion = 'neutral' | 'excited' | 'curious' | 'confused' | 'surprised' | 'teaching';
 
@@ -16,7 +16,7 @@ export type Emotion = 'neutral' | 'excited' | 'curious' | 'confused' | 'surprise
  * of each resonance, giving the small-creature, slightly synthetic timbre.
  */
 export const VOICE_LINES = [
-  'pitch 330 620',
+  'pitch 245 640',
   'formant 1 112 100 100',
   'formant 2 115 100 100',
   'formant 3 115 108 100',
