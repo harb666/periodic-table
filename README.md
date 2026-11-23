@@ -45,6 +45,9 @@ Requires Node 20+.
 * **Collection**: cards unlock by exploring and turn holo through quizzes and hunts. There are 13 stickers and no monetisation.
 * **Ask Zap**: a tutor that works fully offline, using rule-based answers from the curated content. An optional server-side AI
   mode is available (see below).
+* **Zap, the mascot**: a rigged 3D character who lives in the corner. Every so often he runs across the screen to an element
+  tile (2D or 3D), a mode button, the title or a sticker, bounces on it or points at it, says something true about it and runs
+  home. He glances toward the pointer, waves when tapped, and hides while a dialog is open. With reduced motion on he stays put.
 * **Settings**: sound, reduced motion (follows the OS setting), low-effects mode (default on phones and low-core devices), high
   contrast, bigger text and a mascot toggle. Progress is saved in `localStorage` only.
 
@@ -91,14 +94,17 @@ the host's secret settings. The same process serves `dist/` and `/api/tutor`. If
 ```
 src/
   data/        elements.generated.ts (118 validated elements), categories, reactions, content/ (curated kid text)
-  lib/         pure logic: atom builder, chemistry (formula parsing/balance), quiz, hunt, rng, storage, sound, speech
+  lib/         pure logic: atom builder, chemistry (formula parsing/balance), quiz, hunt, rng, storage, sound, speech,
+               mascot (where Zap may go and what he says), zapStage (bridge to tiles inside the 3D table)
+  assets/      zap.glb (generated, rigged mascot) and zap-portrait.png
   tutor/       offline rule-based tutor + client for the optional proxy
   state/       tiny external stores (settings, progress, stickers) + app context
   components/  2D table, card list, element detail dialog, legend, pickers, mascot, decor
-  three/       lazy-loaded 3D: TableScene (instanced tiles + canvas label atlas), AtomModel3D, WebGL detection
+  three/       lazy-loaded 3D: TableScene (instanced tiles + canvas label atlas), AtomModel3D, ZapActor, WebGL detection
   modes/       Explore, AtomBuilder, Hunt, Quiz, Lab, Collection, Tutor
 server/        tutor-proxy.mjs (Node http, @anthropic-ai/sdk)
-scripts/       build-elements.mjs (dataset merge + validation)
+scripts/       build-elements.mjs (dataset merge + validation), rig-character.mjs (mascot rig + clips)
+assets-src/    zap-character.glb (the unrigged source model)
 tests/         data, logic and UI tests
 ```
 
@@ -106,10 +112,26 @@ tests/         data, logic and UI tests
 
 * **Tiles**: three instanced meshes in total (bodies, back-face "anime" outlines and labels), each a single draw call.
 * **Labels**: drawn once into one canvas texture atlas. They are crisp, and no per-tile text objects are created.
-* **Lazy loading**: Three.js loads in its own chunk, only when the 3D view or an atom model is shown. The first load is about
-  120 KB gzipped of JS.
+* **Lazy loading**: Three.js loads in its own chunk, after first paint, for the 3D view, atom models and the mascot (never
+  when WebGL is unavailable). The first load is about 120 KB gzipped of JS.
+* **Mascot**: one small transparent canvas (4 draw calls, ~3.8k vertices) moved with a compositor transform; its loop stops
+  in hidden tabs, while a dialog is open and under reduced motion.
 * **Rendering**: the 3D view renders on demand when motion is off or a dialog covers it. Browsers already pause animation frames in hidden tabs.
 * **Device pixel ratio**: capped at 1.5 in low-effects mode, otherwise 2. Low-effects mode also drops sparkles and antialiasing.
 * **Fallbacks**: if WebGL is unavailable or the context is lost, the app falls back to the 2D table and SVG atom diagrams.
+
+### The mascot rig
+
+The source model (`assets-src/zap-character.glb`) is four static meshes with no skeleton. `npm run rig:build` turns it into
+`src/assets/zap.glb`:
+
+* bakes the node transforms and normalises the character (feet on y = 0, one unit tall, facing +Z);
+* builds a 13-joint skeleton: `Root › Hips › Chest › Head`, two-bone ears, tongue, arms and legs, all axis-aligned at bind;
+* paints skin weights: the body and its outline hull blend smoothly through the waist and neck, ears stiffen toward the base,
+  and the limbs, face and zip follow single bones (at most four influences per vertex, normalised);
+* bakes seven clips at 30 fps: `Idle`, `Run`, `Wave`, `Jump`, `Point`, `Dance`, `Cheer`.
+
+The output passes the Khronos glTF validator with no errors or warnings, and `tests/mascot.test.ts` re-checks the joint
+hierarchy, inverse bind matrices, weights and clips on every test run. Where WebGL is unavailable the mascot is a still image.
 
 See [DATA_SOURCES.md](DATA_SOURCES.md) for data provenance, licences and validation.

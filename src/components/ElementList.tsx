@@ -9,7 +9,7 @@ export function ElementList({ items, onSelect }: { items: ElementData[]; onSelec
         const cat = CATEGORY_BY_ID[e.category];
         return (
           <li key={e.z}>
-            <button className="ecard" style={{ ['--c' as string]: cat.color }} onClick={() => onSelect(e.z)} aria-label={`${e.name}, ${e.symbol}, number ${e.z}, ${cat.label}`}>
+            <button className="ecard" data-z={e.z} style={{ ['--c' as string]: cat.color }} onClick={() => onSelect(e.z)} aria-label={`${e.name}, ${e.symbol}, number ${e.z}, ${cat.label}`}>
               <span className="sym" aria-hidden="true">{e.symbol}</span>
               <span className="nm" aria-hidden="true">
                 {e.z}. {e.name}

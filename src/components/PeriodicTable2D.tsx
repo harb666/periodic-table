@@ -77,6 +77,7 @@ export function PeriodicTable2D({
                 refs.current[e.z] = el;
               }}
               role="gridcell"
+              data-z={e.z}
               tabIndex={e.z === focusZ ? 0 : -1}
               className={`ptile${dim ? ' dim' : ''}${selectedZ === e.z ? ' selected' : ''}`}
               style={{ gridColumn: e.col, gridRow: gridRow(e), ['--c' as string]: cat.color }}

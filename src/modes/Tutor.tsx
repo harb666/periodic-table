@@ -4,7 +4,7 @@ import type { TutorReply } from '../tutor/offline';
 import { useSettings } from '../state/store';
 import { useApp } from '../state/appContext';
 import { BY_Z } from '../data';
-import { MascotSvg } from '../components/Mascot';
+import { ZapPortrait } from '../components/Mascot';
 
 interface Msg extends ChatTurn {
   source?: TutorReply['source'];
@@ -61,7 +61,7 @@ export function Tutor() {
     <section aria-labelledby="tutor-h" className="panel">
       <div className="row" style={{ alignItems: 'center' }}>
         <div style={{ width: 64, height: 64 }} aria-hidden="true">
-          <MascotSvg />
+          <ZapPortrait />
         </div>
         <div className="grow">
           <h2 id="tutor-h" className="h-neon" style={{ margin: 0 }}>

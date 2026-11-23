@@ -7,6 +7,7 @@ import type { OrbitControls as OrbitControlsImpl } from 'three-stdlib';
 import { ELEMENTS } from '../data';
 import { CATEGORY_BY_ID } from '../data/categories';
 import type { CategoryId } from '../data/types';
+import { setZapStage } from '../lib/zapStage';
 import { atlasOffset, drawAtlas, ATLAS_COLS, PLACEHOLDER_AC, PLACEHOLDER_LA } from './labelAtlas';
 
 export interface TableSceneProps {
@@ -149,6 +150,39 @@ function Tiles(props: TableSceneProps) {
     invalidate();
   }, [highlight, matches, selectedZ, hovered, invalidate]);
 
+  // Let Zap the mascot find tiles on screen and bounce on them.
+  const poke = useRef({ i: -1, at: 0 });
+  const camera = useThree((s) => s.camera);
+  useEffect(() => {
+    const corner = new THREE.Vector3();
+    setZapStage({
+      visitable: () => ELEMENTS.filter((e) => !(highlight && e.category !== highlight) && !(matches && !matches.has(e.z))).map((e) => e.z),
+      tileBox(z) {
+        const i = z - 1;
+        if (!pos[i]) return null;
+        const rect = gl.domElement.getBoundingClientRect();
+        const box = { left: Infinity, top: Infinity, right: -Infinity, bottom: -Infinity };
+        for (const [sx, sy] of [[-1, -1], [1, -1], [1, 1], [-1, 1]]) {
+          corner.set(pos[i].x + (sx * TILE_W) / 2, pos[i].y + (sy * TILE_H) / 2, TILE_D / 2 + anim[i].lift).project(camera);
+          if (corner.z > 1) return null;
+          const x = rect.left + ((corner.x + 1) / 2) * rect.width;
+          const y = rect.top + ((1 - corner.y) / 2) * rect.height;
+          box.left = Math.min(box.left, x);
+          box.right = Math.max(box.right, x);
+          box.top = Math.min(box.top, y);
+          box.bottom = Math.max(box.bottom, y);
+        }
+        const inside = box.left >= rect.left && box.right <= rect.right && box.top >= rect.top && box.bottom <= rect.bottom;
+        return inside ? box : null;
+      },
+      poke(z) {
+        poke.current = { i: z - 1, at: performance.now() };
+        invalidate();
+      },
+    });
+    return () => setZapStage(null);
+  }, [anim, camera, gl, highlight, invalidate, matches, pos]);
+
   useFrame((state, delta) => {
     const b = body.current;
     const o = outline.current;
@@ -157,13 +191,17 @@ function Tiles(props: TableSceneProps) {
     const t = state.clock.elapsedTime;
     const k = motion ? Math.min(1, delta * 10) : 1;
     let moving = false;
+    // A poke is a quick dip (he lands) followed by a pop (the tile springs back).
+    const pokeAge = (performance.now() - poke.current.at) / 1000;
+    const pokeLift = pokeAge < 0.14 ? -0.4 : pokeAge < 0.6 ? 0.5 : null;
+    if (pokeAge < 0.9) moving = true;
     for (let i = 0; i < COUNT; i++) {
       const z = i + 1;
       const isEl = i < ELEMENTS.length;
       const el = isEl ? ELEMENTS[i] : null;
       const dimmed = isEl && ((highlight && el!.category !== highlight) || (matches && !matches.has(z)));
       const active = isEl && (hovered === i || selectedZ === z);
-      const targetLift = active ? 0.45 : dimmed ? -0.35 : 0;
+      const targetLift = pokeLift !== null && poke.current.i === i ? pokeLift : active ? 0.45 : dimmed ? -0.35 : 0;
       const targetScale = active ? 1.12 : dimmed ? 0.88 : 1;
       const a = anim[i];
       a.lift += (targetLift - a.lift) * k;

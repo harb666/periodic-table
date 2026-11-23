@@ -10,7 +10,8 @@
     "test": "vitest run",
     "typecheck": "tsc -b",
     "tutor-server": "node server/tutor-proxy.mjs",
-    "data:build": "node scripts/build-elements.mjs"
+    "data:build": "node scripts/build-elements.mjs",
+    "rig:build": "node scripts/rig-character.mjs"
   },
   "dependencies": {
     "@anthropic-ai/sdk": "^1.12.0",

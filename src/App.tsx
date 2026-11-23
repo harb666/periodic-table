@@ -161,7 +161,7 @@ export default function App() {
         />
       )}
       {showSettings && <SettingsPanel onClose={() => setShowSettings(false)} />}
-      {settings.mascot && detailZ === null && !showSettings && <Mascot message={mascotMsg} />}
+      {settings.mascot && <Mascot message={mascotMsg} hidden={detailZ !== null || showSettings} webgl={webgl} reducedMotion={settings.reducedMotion} />}
       <div className="toasts" aria-live="assertive">
         {toasts.map((t) => (
           <div key={t.id} className="toast">
