@@ -35,7 +35,7 @@ Requires Node 20+.
   * Mass, category, period and group, electron configuration, and electron shells.
   * A rotatable 3D atom model, clearly labelled as an illustration.
   * A simple explanation, three facts, everyday uses, discovery information and safety notes.
-  * Pronunciation through browser speech, a "Tell me more" section, and previous/next navigation.
+  * "Hear it" read-aloud in Zap's voice, a "Tell me more" section, and previous/next navigation.
 * **Atom Builder**: add protons, neutrons and electrons. Shows the element, mass number, isotope, ion type and charge. It flags
   isotopes that aren't in its curated stable list, without claiming anything is physically stable.
 * **Element Hunt**: clues are revealed step by step, with directional, encouraging feedback.
