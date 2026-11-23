@@ -35,7 +35,7 @@ Requires Node 20+.
   * Mass, category, period and group, electron configuration, and electron shells.
   * A rotatable 3D atom model, clearly labelled as an illustration.
   * A simple explanation, three facts, everyday uses, discovery information and safety notes.
-  * "Hear it" read-aloud in Zap's voice, a "Tell me more" section, and previous/next navigation.
+  * "Hear it" read-aloud in Gir's voice, a "Tell me more" section, and previous/next navigation.
 * **Atom Builder**: add protons, neutrons and electrons. Shows the element, mass number, isotope, ion type and charge. It flags
   isotopes that aren't in its curated stable list, without claiming anything is physically stable.
 * **Element Hunt**: clues are revealed step by step, with directional, encouraging feedback.
@@ -43,13 +43,13 @@ Requires Node 20+.
 * **Chemistry Lab**: nine balanced textbook reactions shown as labelled simulations, each with an atom-conservation table. A
   "mixing bench" refuses to invent reactions.
 * **Collection**: cards unlock by exploring and turn holo through quizzes and hunts. There are 13 stickers and no monetisation.
-* **Ask Zap**: a tutor that works fully offline from a curated library (`src/tutor/knowledge.ts`, `offline.ts`): the 118
+* **Ask Gir**: a tutor that works fully offline from a curated library (`src/tutor/knowledge.ts`, `offline.ts`): the 118
   elements and their data, 24 everyday substances (what water, salt, air, rust, steel… are made of and how they form), over
   100 general chemistry topics (atoms, bonding, states of matter, reactions, acids and bases, the periodic table, record
   breakers), and the Chem Lab's checked reactions. It explains the science and never gives steps to do at home; for two
   elements it has no checked reaction for, it says so and does not guess. It is a library, not a thinking AI: questions
   outside it get an honest "not in my library yet". An optional server-side AI mode can answer anything (see below).
-* **Zap's voice**: a custom squeaky robot voice, synthesised in the browser. Zap speaks tutor answers, his tips and reactions,
+* **Gir's voice**: a custom squeaky robot voice, synthesised in the browser. Gir speaks tutor answers, his tips and reactions,
   and the "Hear it" read-aloud on every element card. Switch it off in Settings or in the tutor; the mute button silences it too.
 * **Settings**: sound, reduced motion (follows the OS setting), low-effects mode (default on phones and low-core devices), high
   contrast, bigger text and a mascot toggle. Progress is saved in `localStorage` only.
@@ -62,7 +62,7 @@ Requires Node 20+.
   anything leaves the device. Those messages are answered locally and never sent anywhere.
 * The online tutor is **off by default**. A grown-up has to enable it in Settings, and it is only used if the proxy server is
   running. It receives only the question, the element being viewed and the last six chat turns. The server strips email and
-  phone patterns, caps input length and rate-limits requests. It also holds the system prompt, which says Zap is a program and
+  phone patterns, caps input length and rate-limits requests. It also holds the system prompt, which says Gir is a program and
   not a friend, must never give experiment instructions, and must not collect personal data.
 
 ## Optional AI tutor (server-side)
@@ -98,10 +98,10 @@ the host's secret settings. The same process serves `dist/` and `/api/tutor`. If
 src/
   data/        elements.generated.ts (118 validated elements), categories, reactions, content/ (curated kid text)
   lib/         pure logic: atom builder, chemistry (formula parsing/balance), quiz, hunt, rng, storage, sound, speech,
-               mascot (where Zap may go and what he says), zapStage (bridge to tiles inside the 3D table)
+               mascot (where Gir may go and what he says), zapStage (bridge to tiles inside the 3D table)
   assets/      zap.glb (generated, rigged mascot) and zap-portrait.png
   tutor/       offline rule-based tutor + client for the optional proxy
-  voice/       Zap's voice: text planning, pitch contour, eSpeak worker, Web Audio pipeline
+  voice/       Gir's voice: text planning, pitch contour, eSpeak worker, Web Audio pipeline
   state/       tiny external stores (settings, progress, stickers) + app context
   components/  2D table, card list, element detail dialog, legend, pickers, mascot, decor
   three/       lazy-loaded 3D: TableScene (instanced tiles + canvas label atlas), AtomModel3D, ZapActor, WebGL detection
@@ -138,13 +138,13 @@ The source model (`assets-src/zap-character.glb`) is four static meshes with no 
 The output passes the Khronos glTF validator with no errors or warnings, and `tests/mascot.test.ts` re-checks the joint
 hierarchy, inverse bind matrices, weights and clips on every test run. Where WebGL is unavailable the mascot is a still image.
 
-### Zap's voice
+### Gir's voice
 
 Everything runs on the device: no server, no account, no per-use cost, and it works offline once loaded.
 
 ```
 text ─► src/voice/text.ts      sentences + mood per sentence; chemistry pronunciations; symbols and formulas spelled out
-     ─► engine.worker.ts       eSpeak (via meSpeak) in a Web Worker, with Zap's own voice definition (pitch range, formants)
+     ─► engine.worker.ts       eSpeak (via meSpeak) in a Web Worker, with Gir's own voice definition (pitch range, formants)
      ─► contour.ts             pitch movement per sentence: register jumps, vibrato, mood shape (as a playback-rate curve)
      ─► zapVoice.ts            Web Audio: buzz, metallic resonance, brightness, compressor ─► speakers
 ```
@@ -155,7 +155,7 @@ text ─► src/voice/text.ts      sentences + mood per sentence; chemistry pron
   peaks near 980 Hz. Ten seconds cannot train or clone a voice, so this is a designed voice with the same measurable
   character, not a copy of the recordings.
 * **Clarity over mimicry**: explaining sentences are slower, steadier and slightly lower, with a short pause between words
-  and boosted consonants; the wild leaps are kept for short exclamations. Zap is deliberately less buzzy than the references
+  and boosted consonants; the wild leaps are kept for short exclamations. Gir is deliberately less buzzy than the references
   (harmonic-to-noise ratio about 13 dB against 8 dB), because the buzz costs intelligibility.
 * **Moods**: excited, curious, confused, surprised, teaching and neutral, chosen per sentence from wording and punctuation.
 * **Pronunciation**: all 118 element names and the app's science vocabulary were transcribed through the engine; the ones it
@@ -164,7 +164,7 @@ text ─► src/voice/text.ts      sentences + mood per sentence; chemistry pron
   (worker download and start), then roughly 10–90 ms of synthesis per sentence.
 * **Size**: the worker is about 1.9 MB (0.7 MB gzipped) and is fetched only after the first tap with the voice switched on.
 * **One voice only**: wherever the engine can run, nothing else ever speaks. The engine starts downloading shortly after the
-  page loads; if it is still not ready 8 s after Zap is asked to speak (slow connection), that one sentence is skipped (it is
+  page loads; if it is still not ready 8 s after Gir is asked to speak (slow connection), that one sentence is skipped (it is
   on screen) rather than read in another voice. A failed sentence is retried once on a fresh engine.
 * **Fallback**: only a browser with no Web Workers or no Web Audio (or three engine crashes in a row) gets the browser's
   built-in speech voice.

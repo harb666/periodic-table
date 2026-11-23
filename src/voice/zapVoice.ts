@@ -1,4 +1,4 @@
-// Zap's voice: text → (worker) eSpeak with a custom voice → Web Audio character
+// Gir's voice: text → (worker) eSpeak with a custom voice → Web Audio character
 // stage (pitch movement, resonance, brightness) → speakers. Sentence by
 // sentence, so the first words start quickly and speech can be interrupted.
 // Only a browser that cannot run the engine at all gets the browser's own speech voice instead.
@@ -303,7 +303,7 @@ class ZapVoice {
   /**
    * Say something. Resolves to which voice was used, or false if nothing was spoken.
    * A new call interrupts whatever was being said (unless it is `passive`).
-   * Where the engine can run, only Zap's voice is ever used: if a sentence cannot
+   * Where the engine can run, only Gir's voice is ever used: if a sentence cannot
    * be synthesised he stays quiet (the words are on screen) rather than switching voices.
    */
   async speak(text: string, opts: SpeakOptions = {}): Promise<'zap' | 'fallback' | false> {

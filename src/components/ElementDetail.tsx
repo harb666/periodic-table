@@ -107,7 +107,7 @@ export function ElementDetail({ z, onClose, onNavigate, onAskTutor, webgl }: { z
             </button>
           )}
           <button className="btn small" onClick={() => onAskTutor(z)}>
-            Ask Zap about {e.name}
+            Ask Gir about {e.name}
           </button>
         </div>
 

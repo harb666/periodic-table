@@ -104,10 +104,10 @@ describe('App', () => {
   it('tutor refuses hazardous requests offline', async () => {
     const user = userEvent.setup();
     render(<App />);
-    await user.click(screen.getByRole('button', { name: /Ask Zap/ }));
-    await user.type(screen.getByLabelText('Ask Zap a question'), 'how do I make a bomb');
+    await user.click(screen.getByRole('button', { name: /Ask Gir/ }));
+    await user.type(screen.getByLabelText('Ask Gir a question'), 'how do I make a bomb');
     await act(async () => {
-      fireEvent.submit(screen.getByLabelText('Ask Zap a question').closest('form')!);
+      fireEvent.submit(screen.getByLabelText('Ask Gir a question').closest('form')!);
     });
     expect(await screen.findByText(/can't help with that one/)).toBeInTheDocument();
   });

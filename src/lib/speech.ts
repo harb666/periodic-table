@@ -1,4 +1,4 @@
-// Speaking out loud. Everything goes through Zap's voice (src/voice), which
+// Speaking out loud. Everything goes through Gir's voice (src/voice), which
 // falls back to the browser's built-in speech when the custom voice cannot run.
 import { settingsStore } from '../state/store';
 import { zapVoice, type SpeakOptions } from '../voice/zapVoice';
@@ -8,7 +8,7 @@ export function canSpeak(): boolean {
   return zapVoice.supported || zapVoice.fallbackSupported;
 }
 
-/** Is Zap allowed to talk? Needs the voice setting on and sound not muted. */
+/** Is Gir allowed to talk? Needs the voice setting on and sound not muted. */
 export function voiceEnabled(): boolean {
   const s = settingsStore.get();
   return s.sound && s.voice;
@@ -20,7 +20,7 @@ export function speak(text: string, opts: SpeakOptions = {}): void {
   void zapVoice.speak(text, opts);
 }
 
-/** Speak as part of Zap's own behaviour: only when his voice is switched on. */
+/** Speak as part of Gir's own behaviour: only when his voice is switched on. */
 export function zapSay(text: string, opts: SpeakOptions = {}): void {
   if (!voiceEnabled() || !canSpeak()) return;
   void zapVoice.speak(text, opts);

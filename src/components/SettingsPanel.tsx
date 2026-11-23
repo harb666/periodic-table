@@ -7,8 +7,8 @@ const ROWS: { key: keyof Settings; label: string; help: string }[] = [
   { key: 'lowEffects', label: 'Low effects mode', help: 'Faster on older phones and tablets' },
   { key: 'highContrast', label: 'High contrast', help: 'Solid colours and plain text' },
   { key: 'largeText', label: 'Bigger text', help: 'Makes words easier to read' },
-  { key: 'mascot', label: 'Show Zap the mascot', help: 'The little helper who lives in the corner and sometimes runs around' },
-  { key: 'voice', label: "Zap's voice", help: 'Zap says his tips and answers out loud in his squeaky robot voice' },
+  { key: 'mascot', label: 'Show Gir the mascot', help: 'The little helper who lives in the corner and sometimes runs around' },
+  { key: 'voice', label: "Gir's voice", help: 'Gir says his tips and answers out loud in his squeaky robot voice' },
   { key: 'onlineTutor', label: 'Online AI tutor (grown-ups)', help: 'Only works if a grown-up set up the server. Questions are sent without any personal info.' },
 ];
 

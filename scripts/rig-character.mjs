@@ -1,4 +1,4 @@
-// Rigs the Zap mascot.
+// Rigs the Gir mascot.
 //
 // The source model (assets-src/zap-character.glb) is four static meshes with no
 // skeleton. This script bakes the node transforms into the vertices, normalises

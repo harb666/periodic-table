@@ -24,7 +24,7 @@ const MODES: { id: ModeId; label: string; glyph: string }[] = [
   { id: 'quiz', label: 'Quiz Arcade', glyph: '♥' },
   { id: 'lab', label: 'Chem Lab', glyph: '⚗' },
   { id: 'collection', label: 'Collection', glyph: '◈' },
-  { id: 'tutor', label: 'Ask Zap', glyph: '☺' },
+  { id: 'tutor', label: 'Ask Gir', glyph: '☺' },
 ];
 
 function initialMode(): ModeId {
@@ -61,7 +61,7 @@ export default function App() {
   }, [settings.highContrast, settings.largeText, settings.reducedMotion]);
 
   useEffect(() => installVoiceUnlock(), []);
-  // Muting or switching the voice off silences Zap mid-sentence.
+  // Muting or switching the voice off silences Gir mid-sentence.
   useEffect(() => {
     if (!settings.sound || !settings.voice) stopSpeaking();
   }, [settings.sound, settings.voice]);

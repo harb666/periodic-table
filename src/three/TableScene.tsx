@@ -150,7 +150,7 @@ function Tiles(props: TableSceneProps) {
     invalidate();
   }, [highlight, matches, selectedZ, hovered, invalidate]);
 
-  // Let Zap the mascot find tiles on screen and bounce on them.
+  // Let Gir the mascot find tiles on screen and bounce on them.
   const poke = useRef({ i: -1, at: 0 });
   const camera = useThree((s) => s.camera);
   useEffect(() => {

@@ -172,13 +172,13 @@ export function offlineReply(message: string, contextZ?: number): TutorReply {
 
   if (HELLO.test(text))
     return {
-      text: "Hi! I'm Zap, your chemistry helper bot (I'm a computer program, not a person). Ask me about any element, or say 'quiz me'!",
+      text: "Hi! I'm Gir, your chemistry helper bot (I'm a computer program, not a person). Ask me about any element, or say 'quiz me'!",
       source: 'offline',
       suggestions: ['Quiz me', 'What is an atom?', 'Tell me about gold'],
     };
 
   if (/\b(are you (a )?(real|human|person|alive)|who are you|your name)\b/i.test(text))
-    return { text: "I'm Zap, a chemistry helper program. I'm not a person or a friend like the people in your life – but I love helping you learn about elements!", source: 'offline' };
+    return { text: "I'm Gir, a chemistry helper program. I'm not a person or a friend like the people in your life – but I love helping you learn about elements!", source: 'offline' };
 
   if (/\b(quiz|test|question for) me\b|\bask me\b/i.test(text)) {
     const e = BY_Z[[1, 2, 6, 8, 11, 26, 29, 47, 79, 80, 82][Math.floor(Math.random() * 11)]];

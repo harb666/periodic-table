@@ -16,7 +16,7 @@ export function Tutor() {
   const settings = useSettings();
   const { openElement, tutorSeed, selectedZ } = useApp();
   const [msgs, setMsgs] = useState<Msg[]>([
-    { role: 'assistant', text: "Hi! I'm Zap, a chemistry helper program. Ask me about any element, what things are made of, how reactions work – or say “quiz me”!", source: 'offline' },
+    { role: 'assistant', text: "Hi! I'm Gir, a chemistry helper program. Ask me about any element, what things are made of, how reactions work – or say “quiz me”!", source: 'offline' },
   ]);
   const [input, setInput] = useState('');
   const [busy, setBusy] = useState(false);
@@ -70,10 +70,10 @@ export function Tutor() {
         </div>
         <div className="grow">
           <h2 id="tutor-h" className="h-neon" style={{ margin: 0 }}>
-            Zap · Chemistry Helper
+            Gir · Chemistry Helper
           </h2>
           <p className="muted" style={{ margin: 0, fontSize: '0.85rem' }}>
-            {online ? 'Online AI helper is on (set up by a grown-up).' : 'Offline helper – answers come from our checked chemistry library.'} Zap is a computer program, not a person.
+            {online ? 'Online AI helper is on (set up by a grown-up).' : 'Offline helper – answers come from our checked chemistry library.'} Gir is a computer program, not a person.
           </p>
         </div>
         {canSpeak() && (
@@ -89,10 +89,10 @@ export function Tutor() {
           </button>
         )}
       </div>
-      <div className="chat" ref={listRef} role="log" aria-live="polite" aria-label="Chat with Zap" style={{ marginTop: 12 }}>
+      <div className="chat" ref={listRef} role="log" aria-live="polite" aria-label="Chat with Gir" style={{ marginTop: 12 }}>
         {msgs.map((m, i) => (
           <div key={i} className={`msg ${m.role === 'user' ? 'user' : 'bot'}${m.source === 'safety' ? ' safety' : ''}`}>
-            <span className="sr-only">{m.role === 'user' ? 'You said: ' : 'Zap said: '}</span>
+            <span className="sr-only">{m.role === 'user' ? 'You said: ' : 'Gir said: '}</span>
             {m.text}
             {m.z && m.role === 'assistant' && (
               <div>
@@ -103,7 +103,7 @@ export function Tutor() {
             )}
           </div>
         ))}
-        {busy && <div className="msg bot">Zap is thinking…</div>}
+        {busy && <div className="msg bot">Gir is thinking…</div>}
       </div>
       <div className="row" style={{ marginTop: 10 }}>
         {suggestions.map((s) => (
@@ -121,7 +121,7 @@ export function Tutor() {
         }}
       >
         <label htmlFor="tutor-input" className="sr-only">
-          Ask Zap a question
+          Ask Gir a question
         </label>
         <input id="tutor-input" className="input grow" style={{ flex: 1, width: 'auto' }} maxLength={400} value={input} onChange={(e) => setInput(e.target.value)} placeholder="Ask about any element…" autoComplete="off" />
         <button className="btn primary" type="submit" disabled={busy || !input.trim()}>
@@ -129,7 +129,7 @@ export function Tutor() {
         </button>
       </form>
       <p className="muted" style={{ fontSize: '0.8rem', marginTop: 10 }}>
-        Please don't share your name, address, school or other personal details. Zap will never tell you to do experiments – real chemistry needs a trained grown-up.
+        Please don't share your name, address, school or other personal details. Gir will never tell you to do experiments – real chemistry needs a trained grown-up.
       </p>
     </section>
   );

@@ -15,12 +15,12 @@ const TIPS = [
   'Elements in the bottom two rows belong in rows 6 and 7.',
 ];
 
-/** Still picture of Zap, for avatars and for when WebGL is unavailable. */
+/** Still picture of Gir, for avatars and for when WebGL is unavailable. */
 export function ZapPortrait() {
   return <img className="zap-portrait" src={portraitUrl} alt="" draggable={false} />;
 }
 
-/** Something Zap can run to: a DOM element, or a tile inside the 3D table. */
+/** Something Gir can run to: a DOM element, or a tile inside the 3D table. */
 interface Trip {
   kind: TargetKind;
   /** Current on-screen box, or null once it is gone. Re-read every frame so he follows scrolling. */
@@ -86,7 +86,7 @@ export function Mascot({ message, hidden = false, webgl, reducedMotion }: { mess
   const [actor, setActor] = useState<ZapActor | null>(null);
   const [tip, setTip] = useState(0);
   const [bubble, setBubble] = useState<{ text: string; n: number; flipX: boolean; below: boolean } | null>(null);
-  // Zap's feet, in viewport pixels. Mutated by the animation loop, never by React.
+  // Gir's feet, in viewport pixels. Mutated by the animation loop, never by React.
   const pos = useRef<Point>({ x: 0, y: 0 });
   const away = useRef(false);
 
@@ -323,7 +323,7 @@ export function Mascot({ message, hidden = false, webgl, reducedMotion }: { mess
         </div>
       )}
       <canvas ref={canvasRef} aria-hidden="true" />
-      <button className="bot" onClick={onTap} aria-label="Zap the chemistry helper: show another tip" title="Tap me for a tip">
+      <button className="bot" onClick={onTap} aria-label="Gir the chemistry helper: show another tip" title="Tap me for a tip">
         {!actor && <ZapPortrait />}
       </button>
     </div>

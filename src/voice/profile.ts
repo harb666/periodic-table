@@ -1,4 +1,4 @@
-// Zap's voice profile.
+// Gir's voice profile.
 //
 // The numbers come from measuring three short reference clips (about 10 s of
 // clear voice once background noise is gated out): median pitch ≈ 650 Hz, the

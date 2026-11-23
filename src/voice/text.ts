@@ -38,6 +38,7 @@ export const PRONUNCIATIONS: Record<string, string> = {
   fluorine: "fl'O@ri:n",
   xenon: "z'i:n0n",
   zap: "z'ap",
+  gir: "g'3:",
 };
 // The metal is "led"; the verb ("lead to…") is left alone.
 const LEAD_METAL = "l'Ed";

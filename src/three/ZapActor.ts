@@ -1,4 +1,4 @@
-// Zap, the rigged 3D mascot. Loaded lazily (this module pulls in three.js).
+// Gir, the rigged 3D mascot. Loaded lazily (this module pulls in three.js).
 // The skeleton, skin weights and clips come from scripts/rig-character.mjs.
 import * as THREE from 'three';
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';

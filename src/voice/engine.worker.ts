@@ -1,4 +1,4 @@
-// Speech synthesis worker: eSpeak (via meSpeak, GPL) with Zap's custom voice
+// Speech synthesis worker: eSpeak (via meSpeak, GPL) with Gir's custom voice
 // definition. Runs off the main thread so a sentence never stalls rendering.
 // In: { warm } | { id, text, speed, pitch, wordgap }   Out: { ready } | { id, pcm, sampleRate } | { id, error }
 import meSpeak from 'mespeak';

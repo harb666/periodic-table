@@ -1,9 +1,9 @@
-// Zap's offline chemistry library: everyday substances and general chemistry ideas,
+// Gir's offline chemistry library: everyday substances and general chemistry ideas,
 // written for a 9-year-old. Every entry is standard school-level chemistry.
 // Answers explain the science; they never give steps for doing anything at home.
 
 export interface Substance {
-  /** Names people use, lower-case. The first is how Zap refers to it. */
+  /** Names people use, lower-case. The first is how Gir refers to it. */
   names: string[];
   formula?: string;
   /** element | compound | mixture | alloy */

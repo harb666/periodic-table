@@ -1,4 +1,4 @@
-// Bridge between the 3D periodic table and Zap the mascot, so he can visit and
+// Bridge between the 3D periodic table and Gir the mascot, so he can visit and
 // poke tiles that live inside the WebGL canvas rather than in the DOM.
 import type { Box } from './mascot';
 

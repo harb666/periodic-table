@@ -9,7 +9,7 @@ export interface Settings {
   lowEffects: boolean;
   highContrast: boolean;
   mascot: boolean;
-  /** Zap speaks his tips, reactions and tutor answers out loud. */
+  /** Gir speaks his tips, reactions and tutor answers out loud. */
   voice: boolean;
   view: ViewMode;
   /** Grown-up opt-in for the online AI tutor (only used if a server proxy exists). */

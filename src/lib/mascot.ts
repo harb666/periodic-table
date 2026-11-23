@@ -1,4 +1,4 @@
-// Pure helpers for Zap's wandering: what he can visit, where he stands, what he says.
+// Pure helpers for Gir's wandering: what he can visit, where he stands, what he says.
 // Kept free of DOM/three so it can be unit-tested.
 import { BY_Z } from '../data';
 import { CATEGORY_BY_ID } from '../data/categories';
@@ -20,7 +20,7 @@ export interface Point {
   y: number;
 }
 
-/** CSS selectors for the things Zap may run up to, by kind. */
+/** CSS selectors for the things Gir may run up to, by kind. */
 export const TARGET_SELECTORS: Record<TargetKind, string> = {
   tile: '.ptile[data-z]:not(.dim), .ecard[data-z]',
   mode: '.mode-btn:not([aria-current])',
@@ -55,7 +55,7 @@ export interface Anchor extends Point {
 }
 
 /**
- * Where Zap's feet go for a target. He hops on top when there is headroom;
+ * Where Gir's feet go for a target. He hops on top when there is headroom;
  * near the top of the screen he stands beside it instead, so he is never cut off.
  */
 export function anchorFor(box: Box, zap: Size, view: Size): Anchor {
@@ -81,7 +81,7 @@ export function stepToward(from: Point, to: Point, maxStep: number): Point & { a
 const TITLE_LINES = ['118 elements – and I like every single one!', 'Welcome to ATOMIC.EXE! Dance break!'];
 const DECOR_LINES = ['Ooh, shiny!', 'Mine! …okay, just looking.'];
 
-/** What Zap says when he reaches something. `label` is the visible text of a mode button. */
+/** What Gir says when he reaches something. `label` is the visible text of a mode button. */
 export function lineFor(kind: TargetKind, opts: { z?: number; label?: string; rand: () => number }): string {
   const pick = (xs: string[]) => xs[Math.floor(opts.rand() * xs.length) % xs.length];
   switch (kind) {
